@@ -29,13 +29,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <TopNavigation/>
       <body className={inter.className}>
-        <main>
-          {children}
-        </main>
+        <header>
+          <TopNavigation />
+        </header>
+        <main className="max-w-6xl my-0 mx-auto">{children}</main>
+        <footer>
+          <FooterNavigation />
+        </footer>
       </body>
-      <FooterNavigation/>
     </html>
   );
 }

@@ -35,14 +35,14 @@ export function TopNavigation() {
                     href={"/ingredients"}
                     className="py-5 px-3 text-gray-700 hover:text-gray-900"
                   >
-                    Ingredients
+                    재료 목록
                   </Link>
-                  <a
-                    href="#"
+                  <Link
+                    href={"/myingredients"}
                     className="py-5 px-3 text-gray-700 hover:text-gray-900"
                   >
-                    Pricing
-                  </a>
+                    나의 재료
+                  </Link>
                 </div>
               </div>
               {/* 메뉴2 */}

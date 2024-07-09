@@ -17,7 +17,6 @@ async function getCocktail() {
 export default async function Home() {
   const cocktails = await getCocktail();
   return (
-    <div>
       <div className="flex justify-start flex-wrap">
         {
         cocktails.body.map((cocktail:CocktailCardProps,index:number) => {
@@ -30,6 +29,5 @@ export default async function Home() {
         })  
       }
       </div>
-    </div>
   );
 }

@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/app/(home)/page";
 import { Ingredient } from "../page";
 import Image from "next/image";
+import Link from "next/link";
 
 async function getDetailIngredients(name : string){
     return fetch(BASE_URL + "/ingredient/getDetail/" + name).then((response) =>
@@ -46,7 +47,9 @@ async function IngredientDetai({params:{name}}:{params: {name:string}}) {
                             className="w-full h-full object-contain"
                             />
                         </div>
-                        <p className="ml-5 text-base">{cocktail.cocktailName}</p>
+                        <Link href={`/cocktails/${cocktail.cocktailName}`}>
+                            <p className="ml-5 text-base">{cocktail.cocktailName}</p>
+                        </Link>
                     </li>
                 ))}
             </ul>

@@ -33,7 +33,7 @@ export default function RootLayout({
         <header>
           <TopNavigation />
         </header>
-        <main className="max-w-6xl my-0 mx-auto">{children}</main>
+        <main className="max-w-6xl my-0 mx-auto min-h-screen">{children}</main>
         <footer>
           <FooterNavigation />
         </footer>

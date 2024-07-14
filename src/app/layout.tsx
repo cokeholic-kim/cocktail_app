@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import Home from './(home)/page';
 import { TopNavigation } from "./(navigation)/topNavigation";
 import { FooterNavigation } from "./(navigation)/footerNavigation";
+import { LoginContextProvider } from "./(context)/LoginContext";
 
 const inter = Inter({ subsets: ["latin"] });
 export const viewport = {
@@ -22,21 +21,22 @@ export const metadata: Metadata = {
     "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) 
+{
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header>
-          <TopNavigation />
-        </header>
-        <main className="max-w-6xl my-0 mx-auto min-h-screen">{children}</main>
-        <footer>
-          <FooterNavigation />
-        </footer>
+        <LoginContextProvider>
+          <header>
+            <TopNavigation />
+          </header>
+          <main className="max-w-6xl my-0 mx-auto min-h-screen">{children}
+          </main>
+          <footer>
+            <FooterNavigation />
+          </footer>
+        </LoginContextProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@ import CocktailCard from "./cocktailCard";
 
 export const BASE_URL = "http://localhost:8082"
 
-interface CocktailCardProps {
+export interface CocktailCardProps {
   imagePath: string;
   cocktailName: string;
   description: string;

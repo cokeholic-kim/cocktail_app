@@ -4,10 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { deleteCookie, getCookie } from "cookies-next";
-import { cookies } from "next/headers";
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
@@ -49,10 +48,15 @@ export function TopNavigation() {
                       className="object-contain w-full "
                     />
                   </div>
-                  <span className="font-bold">Home</span>
                 </Link>
               </div>
               <div className="hidden md:flex items-center space-x-1">
+                <Link
+                  href={"/cocktails"}
+                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
+                >
+                  칵테일
+                </Link>
                 <Link
                   href={"/ingredients"}
                   className="py-5 px-3 text-gray-700 hover:text-gray-900"
@@ -82,7 +86,8 @@ export function TopNavigation() {
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-1">
-                <div className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
+                <div
+                  className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
                   onClick={handleLogout}
                 >
                   logout

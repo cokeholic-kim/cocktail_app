@@ -7,7 +7,7 @@ import Link from 'next/link';
 interface CocktailCardProps {
     imagePath: string;
     name: string;
-    description: string;
+    description: string | null;
 }
 
 function CocktailCard({imagePath,name,description}:CocktailCardProps) {

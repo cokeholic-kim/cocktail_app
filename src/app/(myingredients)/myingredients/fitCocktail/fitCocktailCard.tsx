@@ -2,9 +2,9 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { CocktailFit } from './page';
 import { useState } from "react";
 import IngredientModal from "./ingredientModal";
+import { CocktailFit } from "@/app/(common)/commonProps";
 
 function FitCocktailCard({data}:{data:CocktailFit}) {
     const [modalOpen,setModalOpen] = useState(false);

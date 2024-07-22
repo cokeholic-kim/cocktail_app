@@ -3,3 +3,10 @@ export interface CocktailCardProps {
     cocktailName: string;
     description: string | null;
   }
+
+export interface CocktailFit{
+    cocktailName:string;
+    imagePath:string;
+    includeIngredients:string[];
+    excludeIngredient:string[];
+}

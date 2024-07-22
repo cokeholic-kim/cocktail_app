@@ -1,12 +1,9 @@
 "use client"
 
-import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Ingredient } from './../../(ingredients)/ingredients/page';
 import SimpleIngredientCard from "./SimpleIngredientCard";
 import IngredientCard from "@/app/(ingredients)/ingredients/IngredientCard";
-import { BASE_URL } from "@/app/(home)/page";
 import Link from "next/link";
 
 interface ResponseData {
@@ -28,13 +25,13 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
       setIngredientData(ingredients)
     },[])
 
-    const filteredIngredients = ingredientData.filter((ingredient) =>
-        ingredient.ingredientName.includes(searchValue)
-      );
+    // const filteredIngredients = ingredientData.filter((ingredient) =>
+    //     ingredient.ingredientName.includes(searchValue)
+    //   );
 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setSearchValue(e.target.value)
-    }
+    // const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    //     setSearchValue(e.target.value)
+    // }
 
     const handleCheck = (ingredient: IngredientChecked) => {
       setIngredientData((prevIngredientData) =>
@@ -57,8 +54,6 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
         }
       });
     };
-
-    
 
     const getIngredientNames = (checkedIngredients: Ingredient[]): string[] => {
       return checkedIngredients.map((ingredient) => ingredient.ingredientName);

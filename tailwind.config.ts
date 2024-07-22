@@ -18,6 +18,12 @@ const config: Config = {
       // => @media (min-width: 1280px) { ... }
     },
     extend: {
+      keyframes: {
+        fadeIn: {
+          from :{opacity: "0" , transform: "scale(0.5)"},
+          to : {opacity: "1",transform: "scale(1)"}
+        },
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

@@ -1,7 +1,6 @@
 import CocktailCard from "./cocktailCard";
 
-export const BASE_URL = "http://localhost:8082"
-
+export const BASE_URL = process.env.API_URL
 export interface CocktailCardProps {
   imagePath: string;
   cocktailName: string;
@@ -16,6 +15,7 @@ async function getCocktail() {
 
 export default async function Home() {
   const cocktails = await getCocktail();
+
   return (
       <div className="flex justify-start flex-wrap">
         {

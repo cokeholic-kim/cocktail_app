@@ -1,8 +1,6 @@
 "use client"
-import { Ingredient } from "@/app/(ingredients)/ingredients/page";
-import Image from "next/image";
 import { useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import FitCocktailCard from "./fitCocktailCard";
 import { BASE_URL } from "@/app/(common)/common";
 
@@ -35,7 +33,6 @@ function FitCocktail() {
     const sendIngredientsToAPI = async (ingredientNames: string[]) => {
         const jsondata = {myIngredient : ingredientNames}
         const formData = new FormData();
-        // ingredientNames.forEach(name => formData.append("myIngredient",myIngredient))
         try {
           const response = await fetch(`${BASE_URL}/ingredient/getFitCocktailList`, {
             method: 'POST',
@@ -53,14 +50,17 @@ function FitCocktail() {
         }
       };
   return (
-    <div className="flex justify-start flex-wrap">
-        {/* {JSON.stringify(cocktail)} */}
-      {
-        cocktail.map((data,index) => {
-            return <FitCocktailCard key={index} data={data}/>
-        })
-      }
-    </div>
+    <Suspense fallback={<div>...Loading</div>}>
+
+      <div className="flex justify-start flex-wrap">
+          {/* {JSON.stringify(cocktail)} */}
+        {
+          cocktail.map((data,index) => {
+              return <FitCocktailCard key={index} data={data}/>
+          })
+        }
+      </div>
+    </Suspense>
   )
 }
 

@@ -2,8 +2,8 @@ import Image from 'next/image';
 import React from 'react'
 import { CocktailRequest } from './../AddCocktailSwiper';
 import { Ingredient } from '@/app/(ingredients)/ingredients/page';
-import { BASE_URL } from '@/app/(home)/page';
 import { getCookie } from 'cookies-next';
+import { BASE_URL } from '@/app/(common)/common';
 
 interface FinalCocktailProps{
     cocktailRequest: CocktailRequest;

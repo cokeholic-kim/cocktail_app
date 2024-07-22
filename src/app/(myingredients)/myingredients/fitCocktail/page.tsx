@@ -1,10 +1,10 @@
 "use client"
-import { BASE_URL } from "@/app/(home)/page";
 import { Ingredient } from "@/app/(ingredients)/ingredients/page";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import FitCocktailCard from "./fitCocktailCard";
+import { BASE_URL } from "@/app/(common)/common";
 
 export interface CocktailFit{
     cocktailName:string;

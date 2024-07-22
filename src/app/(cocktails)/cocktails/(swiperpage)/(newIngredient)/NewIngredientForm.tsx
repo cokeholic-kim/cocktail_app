@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/app/(home)/page";
+import { BASE_URL } from "@/app/(common)/common";
 import Image from "next/image";
 import { useState } from "react";
 

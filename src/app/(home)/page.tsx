@@ -1,12 +1,10 @@
+import { BASE_URL } from "../(common)/common";
+import { CocktailCardProps } from "../(common)/commonProps";
 import CocktailCard from "./cocktailCard";
 
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export interface CocktailCardProps {
-  imagePath: string;
-  cocktailName: string;
-  description: string;
-}
+
+
 
 async function getCocktail() {
   return fetch(`${BASE_URL}/cocktail/getAll`).then((response) =>

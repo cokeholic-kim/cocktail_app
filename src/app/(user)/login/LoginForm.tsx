@@ -1,6 +1,6 @@
 "use client"
+import { BASE_URL } from "@/app/(common)/common";
 import { useLoginContext } from "@/app/(context)/LoginContext";
-import { BASE_URL } from "@/app/(home)/page";
 import { setCookie } from "cookies-next";
 import { cookies } from "next/headers";
 import { useRouter } from "next/navigation";

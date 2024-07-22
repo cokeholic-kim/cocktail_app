@@ -1,4 +1,4 @@
-import { BASE_URL } from "@/app/(home)/page";
+import { BASE_URL } from "@/app/(common)/common";
 import IngredientCard from "./IngredientCard";
 
 export interface Ingredient {

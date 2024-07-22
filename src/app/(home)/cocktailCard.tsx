@@ -2,15 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { CocktailCardProps } from '../(common)/commonProps';
 
-
-interface CocktailCardProps {
-    imagePath: string;
-    name: string;
-    description: string | null;
-}
-
-function CocktailCard({imagePath,name,description}:CocktailCardProps) {
+function CocktailCard({imagePath,cocktailName,description}:CocktailCardProps) {
   
 
 
@@ -20,7 +14,7 @@ function CocktailCard({imagePath,name,description}:CocktailCardProps) {
       <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
       <Image
           src={imagePath}
-          alt={name}
+          alt={cocktailName}
           width={400}
           height={300}
           className="rounded-t-lg w-full h-full object-contain"
@@ -29,7 +23,7 @@ function CocktailCard({imagePath,name,description}:CocktailCardProps) {
       </div>
       <div className="mb-4">
         <p className="font-normal text-gray-700 dark:text-gray-400 text-lg">
-          {name}
+          {cocktailName}
         </p>
       </div>
       <div className="mb-6">

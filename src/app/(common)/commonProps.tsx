@@ -1,5 +1,5 @@
 export interface CocktailCardProps {
     imagePath: string;
     cocktailName: string;
-    description: string;
+    description: string | null;
   }

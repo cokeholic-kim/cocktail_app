@@ -1,12 +1,10 @@
 "use client"
 
 import CocktailCard from '@/app/(home)/cocktailCard'
-import { CocktailCardProps } from '@/app/(home)/page'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import AddCocktailCard from './AddCocktailCard'
 import AddCocktailModal from './AddCocktailModal';
 import { Ingredient } from '@/app/(ingredients)/ingredients/page'
-import { useLoginContext } from '@/app/(context)/LoginContext'
 import { Cocktail } from '../typeinterface'
 
 function CocktailPageBody({cocktails,glass,method,ingredients}:{cocktails:Cocktail[],glass:string[],method:string[],ingredients:Ingredient[]}) {
@@ -22,7 +20,7 @@ function CocktailPageBody({cocktails,glass,method,ingredients}:{cocktails:Cockta
             <CocktailCard
               key={index}
               imagePath={cocktail.imagePath}
-              name={cocktail.cocktailName}
+              cocktailName={cocktail.cocktailName}
               description={cocktail.description}
             />
           );
@@ -46,7 +44,7 @@ function CocktailPageBody({cocktails,glass,method,ingredients}:{cocktails:Cockta
                 <CocktailCard
                   key={index}
                   imagePath={cocktail.imagePath}
-                  name={cocktail.cocktailName}
+                  cocktailName={cocktail.cocktailName}
                   description={cocktail.description}
                 />
               );

@@ -4,8 +4,6 @@ import CocktailCard from "./cocktailCard";
 
 
 
-
-
 async function getCocktail() {
   return fetch(`${BASE_URL}/cocktail/getAll`).then((response) =>
     response.json()
@@ -22,7 +20,7 @@ export default async function Home() {
           <CocktailCard
             key={index}
             imagePath={cocktail.imagePath}
-            name={cocktail.cocktailName}
+            cocktailName={cocktail.cocktailName}
             description={cocktail.description}
           />
         );

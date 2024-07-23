@@ -4,13 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { deleteCookie, getCookie } from "cookies-next";
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
     const { isLogin , setIsLogin } = useLoginContext();
+
+    useEffect(() => {
+      const authToken = getCookie('authToken');
+      if(authToken){
+        setIsLogin(true);
+      }
+    }, []);
 
     const handleLogout = () => {
       setIsLogin(false);

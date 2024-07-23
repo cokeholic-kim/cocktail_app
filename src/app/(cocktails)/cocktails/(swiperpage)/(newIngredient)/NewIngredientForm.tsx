@@ -1,4 +1,5 @@
 import { BASE_URL } from "@/app/(common)/common";
+import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -10,9 +11,15 @@ interface IngredientRequset{
     category: string;
   }
 
-function Form({handleChange}:{handleChange:React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>}){
+interface formProps {
+  handleChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+  handleSubmit: (event: React.FormEvent<HTMLFormElement>, setNewIngredientPage: React.Dispatch<React.SetStateAction<boolean>>) => Promise<void>;
+  setNewIngredientPage: React.Dispatch<React.SetStateAction<boolean>>;
+}
+function Form({handleChange,handleSubmit,setNewIngredientPage}:formProps){
+
     return (
-        <form id="signup-form" method='post' action={`${BASE_URL}/join`} 
+        <form id="signup-form" method='post' onSubmit={(event) => handleSubmit(event,setNewIngredientPage)}   
           className='bg-white rounded p-10' style={{width:"48%"}}
         >
             <div className="mb-4">
@@ -116,7 +123,7 @@ function Form({handleChange}:{handleChange:React.ChangeEventHandler<HTMLInputEle
     )
 }
 
-export default function NewIngredientForm(){
+export default function NewIngredientForm({setNewIngredientPage}:{setNewIngredientPage: React.Dispatch<React.SetStateAction<boolean>>}){
     const [newIngredient,setNewIngredient] = useState<IngredientRequset>({
       ingredientName: "",
       enName: "",
@@ -125,8 +132,34 @@ export default function NewIngredientForm(){
       category: "",
     });
     
-    const handleSubmit = () => {
-      
+    const handleSubmit = async (event:React.FormEvent<HTMLFormElement>,setNewIngredientPage: React.Dispatch<React.SetStateAction<boolean>>) => {
+      event.preventDefault();
+      const formData = new FormData();
+      formData.append("ingredientName", newIngredient.ingredientName);
+      formData.append("enName", newIngredient.enName);
+      formData.append("image", newIngredient.image);
+      formData.append("description", newIngredient.description);
+      formData.append("category", newIngredient.category);
+      try{
+        const authToken = getCookie("authToken")
+        const response = await fetch(`${BASE_URL}/user/ingredientRegister`,{
+          method: "POST",
+          headers: {
+            "Authorization": `${authToken}`,
+          },
+          body: formData,
+        })
+        if(response.ok) {
+          alert(`${newIngredient.ingredientName} 이 저장되었습니다.`)
+          setNewIngredientPage(false);
+        } else{
+          const errorData = await response.json()
+          alert(errorData.result.resultMessage)
+        }
+        
+      }catch (error) {
+        alert("Error submitting cocktail request:" + error)
+      }
     }
   
     const handleChange: React.ChangeEventHandler<
@@ -163,7 +196,7 @@ export default function NewIngredientForm(){
   
     return (
       <div className="flex w-full justify-between">
-        <Form handleChange={handleChange} />
+        <Form handleChange={handleChange} handleSubmit={handleSubmit} setNewIngredientPage={setNewIngredientPage}/>
         <div className="bg-white rounded  h-full p-10" style={{ width: "48%" }}>
           {newIngredient.image  &&  (
             <div className="w-full mb-4 relative" style={{ height: "30vh" }}>

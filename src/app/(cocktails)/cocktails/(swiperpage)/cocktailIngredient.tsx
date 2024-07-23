@@ -49,10 +49,10 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
   const [checkedIngredients, setCheckedIngredients] = useState<
     IngredientChecked[]
   >([]);
-  const [newIngredient, setNewIngredient] = useState(false);
+  const [newIngredientPage, setNewIngredientPage] = useState(false);
 
   const handleClickNewIngredient = () => {
-    setNewIngredient(!newIngredient);
+    setNewIngredientPage(!newIngredientPage);
   };
 
   useEffect(() => {
@@ -93,7 +93,7 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
   };
   return (
     <div className="">
-      {newIngredient ? null : 
+      {newIngredientPage ? null : 
       <>
         <h1>재료를 선택해 주세요.</h1>
         <nav
@@ -113,8 +113,8 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
         style={{ height: "80vh" }}
       >
         {
-          newIngredient ? (
-            <NewIngredientForm />
+          newIngredientPage ? (
+            <NewIngredientForm setNewIngredientPage={setNewIngredientPage}/>
           )
           :searchValue === ""
           ? ingredientData.map((ingredient, index) => (
@@ -139,7 +139,7 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
               ))
           }
           {
-            newIngredient ? null:<NewIngredientCard
+            newIngredientPage ? null:<NewIngredientCard
             handleClickNewIngredient={handleClickNewIngredient}
           />
           }

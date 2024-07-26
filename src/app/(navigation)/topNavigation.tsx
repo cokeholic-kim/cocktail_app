@@ -101,6 +101,7 @@ export function TopNavigation() {
                 </div>
               </div>
             )}
+     
 
             {/* mobile menu */}
             <div className="md:hidden flex items-center">
@@ -141,12 +142,35 @@ export function TopNavigation() {
           </div>
         </div>
         <div className={classNames("md:hidden", { hidden: !menuToggle })}>
-          <a href="#" className="block py-2 px-4 text-sm hover:bg-gray-200">
-            Pricing
-          </a>
-          <a href="#" className="block py-2 px-4 text-sm hover:bg-gray-200">
-            Features
-          </a>
+        {!isLogin ? 
+                (<>
+                  <Link href={"/login"} className="block py-2 px-4 text-sm hover:bg-gray-200" onClick={()=>setMenuToggle(false)}>Login</Link> 
+                  <Link href={"/join"} className="block py-2 px-4 text-sm hover:bg-gray-200" onClick={()=>setMenuToggle(false)}>Join</Link>
+                </>)
+                : 
+                (<div onClick={handleLogout} className="block py-2 px-4 text-sm hover:bg-gray-200" >Logout</div>)
+                }
+          <Link
+                  href={"/cocktails"}
+                  className="block py-2 px-4 text-sm hover:bg-gray-200"
+                  onClick={()=>setMenuToggle(false)}
+                >
+                  칵테일
+                </Link>
+                <Link
+                  href={"/ingredients"}
+                  className="block py-2 px-4 text-sm hover:bg-gray-200"
+                  onClick={()=>setMenuToggle(false)}
+                >
+                  재료 목록
+                </Link>
+                <Link
+                  href={"/myingredients"}
+                  className="block py-2 px-4 text-sm hover:bg-gray-200"
+                  onClick={()=>setMenuToggle(false)}
+                >
+                  나의 재료
+                </Link>
         </div>
       </nav>
     );

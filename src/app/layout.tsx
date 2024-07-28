@@ -26,6 +26,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
 
   return (
     <html lang="en">
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
       <body className={inter.className}>
         <LoginContextProvider>
           <header>

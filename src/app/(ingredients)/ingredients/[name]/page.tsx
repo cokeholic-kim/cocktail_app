@@ -13,7 +13,7 @@ async function IngredientDetai({params:{name}}:{params: {name:string}}) {
     const ingredientData = await getDetailIngredients(name);
     const ingreident:Ingredient = ingredientData.body;
   return (
-    <div >
+    <div className="text-black">
         {/* {JSON.stringify(ingredientData)} */}
         <div className="w-full h-96 relative -mb-8 -z-10">
             <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">

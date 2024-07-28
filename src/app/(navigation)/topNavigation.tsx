@@ -104,7 +104,7 @@ export function TopNavigation() {
      
 
             {/* mobile menu */}
-            <div className="md:hidden flex items-center">
+            <div className="md:hidden flex items-center text-black">
               <button onClick={() => setMenuToggle(!menuToggle)}>
                 {menuToggle ? (
                   <svg
@@ -141,7 +141,7 @@ export function TopNavigation() {
             </div>
           </div>
         </div>
-        <div className={classNames("md:hidden", { hidden: !menuToggle })}>
+        <div className={classNames("md:hidden text-black", { hidden: !menuToggle })}>
         {!isLogin ? 
                 (<>
                   <Link href={"/login"} className="block py-2 px-4 text-sm hover:bg-gray-200" onClick={()=>setMenuToggle(false)}>Login</Link> 

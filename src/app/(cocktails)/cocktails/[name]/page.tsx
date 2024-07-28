@@ -32,7 +32,7 @@ async function CocktailDetail({params:{name}}:{params: {name:string}}) {
   const cocktailData = await getDetailCocktail(name);
   const cocktail:Cocktail = cocktailData.body;
   return (
-    <div >
+    <div className="text-black">
         <div className="w-full h-96 relative -mb-8 -z-10">
             <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                 <Image

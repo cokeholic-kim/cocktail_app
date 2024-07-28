@@ -2,7 +2,6 @@
 import { BASE_URL } from "@/app/(common)/common";
 import { useLoginContext } from "@/app/(context)/LoginContext";
 import { setCookie } from "cookies-next";
-import { cookies } from "next/headers";
 import { useRouter } from "next/navigation";
 
 function LoginForm() {
@@ -10,20 +9,19 @@ function LoginForm() {
     const { isLogin , setIsLogin } = useLoginContext();
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-    
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
-
+        
         try {
-            const response = await fetch(`${BASE_URL}/login`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
-
-            if(response.ok){
+          const response = await fetch(`${BASE_URL}/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+          
+          if(response.ok){
                 const headers = response.headers;
                 const jwtToken = headers.get("authorization");
 
@@ -41,7 +39,7 @@ function LoginForm() {
                 window.location.reload();
             }
           } catch (error) {
-            console.error('Error submitting form:', error);
+             alert('Error submitting form:' + error);
           }
    }
   return (
@@ -60,7 +58,7 @@ function LoginForm() {
             className="bg-gray-100 shadow-inner focus:outline-none border-2 focus:border-opacity-50 focus:border-green-600 py-3 px-5 rounded-lg"
             name="password"
           />
-          <button className="py-3 px-5 bg-gray-800 text-white mt-3 text-lg rounded-lg focus:outline-none hover:opacity-90">
+          <button type="submit" className="py-3 px-5 bg-gray-800 text-white mt-3 text-lg rounded-lg focus:outline-none hover:opacity-90">
             Log In
           </button>
         </form>

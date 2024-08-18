@@ -2,11 +2,12 @@
 import { BASE_URL } from "@/app/(common)/common";
 import { useLoginContext } from "@/app/(context)/LoginContext";
 import { setCookie } from "cookies-next";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 function LoginForm() {
-    const router = useRouter()
-    const { isLogin , setIsLogin } = useLoginContext();
+   const router = useRouter()
+   const { isLogin , setIsLogin } = useLoginContext();
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -26,11 +27,10 @@ function LoginForm() {
                 const jwtToken = headers.get("authorization");
 
                 // sessionStorage.setItem('authToken', jwtToken!);
-                const cookieExpiration = 60 * 60; // 60분
-                setCookie('authToken',jwtToken,{
-                  maxAge: cookieExpiration,
-                })
-                
+                // const cookieExpiration = 60 * 60; // 60분
+                // setCookie('authToken',jwtToken,{
+                //   maxAge: cookieExpiration,
+                // })
                 
                 setIsLogin(true);
                 router.push('/');
@@ -42,26 +42,90 @@ function LoginForm() {
              alert('Error submitting form:' + error);
           }
    }
+   const onNaverLogin = () => {
+    window.location.href = BASE_URL + "/oauth2/authorization/naver"
+   }
+
+   const onGoogleLogin = () => {
+    window.location.href = BASE_URL + "/oauth2/authorization/google"
+   }
+
+   const onKaKaoLogin = () => {
+    window.location.href = BASE_URL + "/oauth2/authorization/google"
+   }
+
+   const onAuthLogin = (endpoint : string) => {
+    window.location.href = BASE_URL + "/oauth2/authorization/" + endpoint
+   }
+
+  
+
+   const getData = () => {
+    fetch(BASE_URL + "/my", {
+      method: 'GET',
+      credentials:'include'
+    })
+    .then(res => res.json())
+    .then(data => {alert(data)})
+    .catch(error => alert(error))
+   }
+
+   const showErrorAlert = () => {
+     const urlParams = new URLSearchParams(window.location.search);
+     const error = urlParams.get("error");
+
+     if (error) {
+       alert(decodeURIComponent(error)); // 에러 메시지를 alert로 표시
+     }
+   };
+  window.onload = showErrorAlert;
   return (
     <div className="h-screen flex items-center justify-center bg-gray-800">
-      <div className="bg-white w-full max-w-lg py-10 rounded-lg text-center">
+      <div className="bg-white w-full max-w-lg py-10 rounded-lg text-center  px-5">
         <h3 className="text-3xl text-gray-800">Log In</h3>
-        <form className="flex flex-col mt-5 px-5" onSubmit={handleSubmit}>
+        <form className="flex flex-col mt-5" onSubmit={handleSubmit}>
           <input
             placeholder="Email"
-            className="bg-gray-100 shadow-inner focus:outline-none border-2 focus:border-opacity-50 focus:border-green-600 mb-3 py-3 px-5 rounded-lg"
+            className="bg-gray-100 shadow-inner focus:outline-none border-2 focus:border-opacity-50 focus:border-green-600 mb-3 py-3 px-5 rounded-lg text-black"
             name="username"
           />
           <input
             type="password"
             placeholder="passworld "
-            className="bg-gray-100 shadow-inner focus:outline-none border-2 focus:border-opacity-50 focus:border-green-600 py-3 px-5 rounded-lg"
+            className="bg-gray-100 shadow-inner focus:outline-none border-2 focus:border-opacity-50 focus:border-green-600 py-3 px-5 rounded-lg text-black"
             name="password"
           />
           <button type="submit" className="py-3 px-5 bg-gray-800 text-white mt-3 text-lg rounded-lg focus:outline-none hover:opacity-90">
             Log In
           </button>
         </form>
+        <hr className="h-1 my-8 bg-gray-200 border-0 dark:bg-gray-700 rounded"></hr>
+        <div className="flex flex-col">
+          <button  onClick={onNaverLogin} className="rounded-lg focus:outline-none hover:opacity-90  flex items-center" style=    {{background:"#03c75a"}}>
+              <Image
+                src={"/assets/naver_icon.png"}
+                alt={"네이버 로그인"}
+                width={50}
+                height={50}
+                className="  h-full object-contain"
+              />
+              <p className="text-white ml-32 text-lg">네이버로 로그인</p>
+            </button>
+            <button  onClick={onGoogleLogin} className="py-2 mt-3 rounded-lg focus:outline-none hover:opacity-90  flex items-center border relative">
+              <Image
+                src={"/assets/google_icon.png"}
+                alt={"구글 로그인"}
+                width={30}
+                height={30}
+                className=" ml-4 h-full object-contain"
+              />
+              <p className="ml-40 text-lg">구글 로그인</p>
+            </button>
+            <button  onClick={onKaKaoLogin} className="py-2 mt-3 h-12 rounded-lg focus:outline-none hover:opacity-90  flex items-center border relative" style={{background:"#FEE500"}}>
+            <p className="ml-48 text-lg ">카카오 로그인</p>
+            </button>
+          <button onClick={getData}>Get Data</button>
+        </div>
       </div>
     </div>
   );

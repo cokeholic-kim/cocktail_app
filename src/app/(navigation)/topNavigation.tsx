@@ -13,7 +13,8 @@ export function TopNavigation() {
     const { isLogin , setIsLogin } = useLoginContext();
 
     useEffect(() => {
-      const authToken = getCookie('authToken');
+      const authToken = getCookie('Authorization');
+      console.log(authToken);
       if(authToken){
         setIsLogin(true);
       }
@@ -21,7 +22,7 @@ export function TopNavigation() {
 
     const handleLogout = () => {
       setIsLogin(false);
-      deleteCookie('authToken');
+      deleteCookie('Authorization');
     }
 
     const checkCookieExpiration = () => {

@@ -4,16 +4,15 @@ import React, { useRef, useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperCore from "swiper"
 import { Navigation, Scrollbar } from 'swiper/modules';
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/scrollbar";
 import { Ingredient } from '@/app/(ingredients)/ingredients/page';
 import CocktailInformation from './(swiperpage)/CocktailIformation';
 import CocktailIngredient from './(swiperpage)/cocktailIngredient';
 import CocktailImage from './(swiperpage)/cocktailImage';
 import FinalCocktail from './(swiperpage)/finalCocktail';
-import { IngredientChecked } from '@/app/(myingredients)/myingredients/MyIngredientBody';
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/scrollbar";
 
 export interface CocktailIngredient extends Ingredient{
   checked?:boolean,

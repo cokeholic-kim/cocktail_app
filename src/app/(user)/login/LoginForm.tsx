@@ -1,7 +1,7 @@
 "use client"
+
 import { BASE_URL } from "@/app/(common)/common";
 import { useLoginContext } from "@/app/(context)/LoginContext";
-import { setCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -26,12 +26,6 @@ function LoginForm() {
                 const headers = response.headers;
                 const jwtToken = headers.get("authorization");
 
-                // sessionStorage.setItem('authToken', jwtToken!);
-                // const cookieExpiration = 60 * 60; // 60분
-                // setCookie('authToken',jwtToken,{
-                //   maxAge: cookieExpiration,
-                // })
-                
                 setIsLogin(true);
                 router.push('/');
             }else{
@@ -50,13 +44,13 @@ function LoginForm() {
     window.location.href = BASE_URL + "/oauth2/authorization/google"
    }
 
-   const onKaKaoLogin = () => {
-    window.location.href = BASE_URL + "/oauth2/authorization/google"
-   }
+  //  const onKaKaoLogin = () => {
+  //   window.location.href = BASE_URL + "/oauth2/authorization/google"
+  //  }
 
-   const onAuthLogin = (endpoint : string) => {
-    window.location.href = BASE_URL + "/oauth2/authorization/" + endpoint
-   }
+  //  const onAuthLogin = (endpoint : string) => {
+  //   window.location.href = BASE_URL + "/oauth2/authorization/" + endpoint
+  //  }
 
   
 
@@ -121,10 +115,10 @@ function LoginForm() {
               />
               <p className="ml-40 text-lg">구글 로그인</p>
             </button>
-            <button  onClick={onKaKaoLogin} className="py-2 mt-3 h-12 rounded-lg focus:outline-none hover:opacity-90  flex items-center border relative" style={{background:"#FEE500"}}>
+            {/* <button  onClick={onKaKaoLogin} className="py-2 mt-3 h-12 rounded-lg focus:outline-none hover:opacity-90  flex items-center border relative" style={{background:"#FEE500"}}>
             <p className="ml-48 text-lg ">카카오 로그인</p>
-            </button>
-          <button onClick={getData}>Get Data</button>
+            </button> */}
+            {/* <button onClick={getData}>Get Data</button> */} 
         </div>
       </div>
     </div>

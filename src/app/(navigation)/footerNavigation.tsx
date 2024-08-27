@@ -3,21 +3,34 @@ import Link from "next/link";
 
 export function FooterNavigation() {
     return (
-      <header className="bottom-0 w-full h-3 md:h-8 z-10 p-5 flex justify-between items-start ease-in transition-all bg-slate-500">
-        <div className="w-10 md:w-20 cursor-pointer overflow-hidden rounded-full">
+      <footer className="mt-2 bottom-0 w-full z-10 fixed">
+        <div className="max-w-6xl h-20 bg-gray-100 border rounded-tl-2xl rounded-tr-2xl mx-auto px-4 flex justify-between items-center">
+        <Link
+            href={"/"}
+            className="py-5 px-3 text-gray-700 hover:text-gray-900"
+          >
+            홈
+          </Link>
+          <Link
+            href={"/cocktails"}
+            className="py-5 px-3 text-gray-700 hover:text-gray-900"
+          >
+            칵테일
+          </Link>
+          <Link
+            href={"/ingredients"}
+            className="py-5 px-3 text-gray-700 hover:text-gray-900"
+          >
+            재료 목록
+          </Link>
+          <Link
+            href={"/myingredients"}
+            className="py-5 px-3 text-gray-700 hover:text-gray-900"
+          >
+            나의 재료
+          </Link>
         </div>
-        <div>
-          <Link href={"/"}>
-            ingredients
-            </Link>
-            <Link href={"/posts"} className="mx-1">
-            drink
-            </Link>
-            <Link href={"/posts"} className="mx-1">
-            my
-            </Link>
-        </div>
-      </header>
+      </footer>
     );
   }
 

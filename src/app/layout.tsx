@@ -32,7 +32,7 @@ export default function RootLayout({children,}: Readonly<{children: React.ReactN
           <header>
             <TopNavigation />
           </header>
-          <main className="max-w-6xl my-0 mx-auto min-h-screen">{children}
+          <main className="max-w-6xl my-0 mx-auto min-h-screen pb-20">{children}
           </main>
           <footer>
             <FooterNavigation />

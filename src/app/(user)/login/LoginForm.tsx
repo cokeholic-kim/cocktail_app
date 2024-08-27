@@ -22,11 +22,12 @@ function LoginForm() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
+            credentials: 'include'
           });
           
           if (response.ok) {
                 const headers = response.headers;
-                const jwtToken = headers.get("authorization");
+                const jwtToken = headers.get("Authorization");
 
                 setIsLogin(true);
                 router.push('/');

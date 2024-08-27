@@ -26,16 +26,16 @@ export function TopNavigation() {
     }
 
     const checkCookieExpiration = () => {
-      const authToken = getCookie('authToken');
+      const authToken = getCookie('Authorization');
       
       if(!authToken){
         setIsLogin(false);
-        deleteCookie('authToken');
+        deleteCookie('Authorization');
       }
     }
 
     if(isLogin){
-      setInterval(checkCookieExpiration,60000);
+      setInterval(checkCookieExpiration,600000);
     }
     
     return (
@@ -59,7 +59,7 @@ export function TopNavigation() {
                 </Link>
               </div>
               <div className="hidden md:flex items-center space-x-1">
-                <Link
+                {/* <Link
                   href={"/cocktails"}
                   className="py-5 px-3 text-gray-700 hover:text-gray-900"
                 >
@@ -76,7 +76,7 @@ export function TopNavigation() {
                   className="py-5 px-3 text-gray-700 hover:text-gray-900"
                 >
                   나의 재료
-                </Link>
+                </Link> */}
               </div>
             </div>
             {/* 메뉴2 */}
@@ -151,7 +151,7 @@ export function TopNavigation() {
                 : 
                 (<div onClick={handleLogout} className="block py-2 px-4 text-sm hover:bg-gray-200" >Logout</div>)
                 }
-          <Link
+          {/* <Link
                   href={"/cocktails"}
                   className="block py-2 px-4 text-sm hover:bg-gray-200"
                   onClick={()=>setMenuToggle(false)}
@@ -171,7 +171,7 @@ export function TopNavigation() {
                   onClick={()=>setMenuToggle(false)}
                 >
                   나의 재료
-                </Link>
+                </Link> */}
         </div>
       </nav>
     );

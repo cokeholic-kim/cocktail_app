@@ -10,8 +10,6 @@ export interface banner {
   order: number;
 }
 
-
-
 async function getCocktail() {
   return fetch(`${BASE_URL}/cocktail/getAll`).then((response) =>
     response.json()

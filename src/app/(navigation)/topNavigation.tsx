@@ -6,11 +6,19 @@ import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
 import {  useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
-import { deleteCookie, getCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
     const { isLogin , setIsLogin } = useLoginContext();
+
+    const deleteCookie = (name:string) => {
+      setCookie(name, '', { 
+        domain: '.soolae-server.shop', 
+        path: '/', 
+        maxAge: -1 
+      });
+    };
 
     useEffect(() => {
       const authToken = getCookie('Authorization');

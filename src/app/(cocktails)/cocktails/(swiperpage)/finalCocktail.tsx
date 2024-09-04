@@ -106,7 +106,7 @@ function FinalCocktail({cocktailRequest,setCocktailRequest}:FinalCocktailProps) 
       }
       formData.append("description",cocktailRequest.description)
       try{
-        const authToken = getCookie('authToken')
+        const authToken = getCookie('Authorization')
         const response = await fetch(`${BASE_URL}/user/saveCocktail`, {
           method: "POST",
           headers: {

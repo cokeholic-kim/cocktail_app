@@ -7,6 +7,7 @@ import classNames from "classnames";
 import {  useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { getCookie, setCookie } from "cookies-next";
+import { BASE_URL, DOMAIN_NAME } from "../(common)/common";
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
@@ -14,7 +15,7 @@ export function TopNavigation() {
 
     const deleteCookie = (name:string) => {
       setCookie(name, '', { 
-        domain: '.soolae-server.shop', 
+        domain: DOMAIN_NAME, 
         path: '/', 
         maxAge: -1 
       });
@@ -44,6 +45,17 @@ export function TopNavigation() {
 
     if(isLogin){
       setInterval(checkCookieExpiration,600000);
+    }
+
+    const handlePost = () => {
+      const authToken = getCookie('Authorization')
+      fetch(`${BASE_URL}/user/saveCocktail`, {
+        method: "POST",
+        headers: {
+          "Authorization": `${authToken}`
+        },
+        body: "",
+      });
     }
     
     return (
@@ -108,8 +120,12 @@ export function TopNavigation() {
                 >
                   logout
                 </div>
+                <div>
+                  <button onClick={handlePost}>테스트 버튼</button>
+                </div>
               </div>
             )}
+           
      
 
             {/* mobile menu */}

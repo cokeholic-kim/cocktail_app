@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/app/(common)/common";
 import IngredientCard from "./IngredientCard";
+import { fetchWithCookie } from "@/app/(cocktails)/cocktails/page";
 
 export interface Ingredient {
     ingredientName: string;
@@ -15,9 +16,7 @@ interface UsedCocktail {
 }
 
 async function getCocktail() {
-    return fetch(BASE_URL + "/ingredient/getAll").then((response) =>
-      response.json()
-    );
+    return fetchWithCookie(`${BASE_URL}/ingredient/getAll`,"Authorization")
   }
 
 async function IngredientsPage() {

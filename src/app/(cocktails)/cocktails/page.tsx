@@ -1,33 +1,44 @@
 import { BASE_URL } from "@/app/(common)/common";
 import CocktailPageBody from "./CocktailPageBody";
+import { cookies } from "next/headers";
 
-async function getAllCocktail(){
-    return fetch(BASE_URL + "/cocktail/getAll",{ cache: 'no-store' }).then((response) =>
-        response.json()
-      );
+export async function fetchWithCookie(url:string, cookieName:string) {
+  const authToken = cookies().get(cookieName);
+  const headers = {
+      'Cookie': authToken?.value ? `${cookieName}=${authToken.value}` : "",
+      'Content-Type': 'application/json'
+  };
+  return fetch(url, {
+      headers,
+      credentials: 'include'
+  }).then(response => response.json());
 }
 
-async function getGlass(){
-  return fetch(BASE_URL + "/cocktail/glass").then((response) =>
-    response.json()
-  );
+async function getAllCocktail() {
+  return fetchWithCookie(BASE_URL + "/cocktail/getAll", "Authorization");
 }
 
-async function getMethod(){
-  return fetch(BASE_URL + "/cocktail/method").then((response) =>
-    response.json()
-  );
+async function getGlass() {
+  return fetchWithCookie(BASE_URL + "/cocktail/glass", "Authorization");
+}
+
+async function getMethod() {
+  return fetchWithCookie(BASE_URL + "/cocktail/method", "Authorization");
 }
 
 async function getAllIngredients() {
-  return fetch(BASE_URL + "/ingredient/getAll",{ cache: 'no-store' }).then((response) =>
-    response.json()
-  );
+  return fetchWithCookie(BASE_URL + "/ingredient/getAll", "Authorization");
 }
 
-
 async function CocktailsPage() {
-  const [cocktailData,glassData,methodData,ingredientData] = await Promise.all([getAllCocktail(),getGlass(),getMethod(),getAllIngredients()]) ;
+  const authToken = cookies().get("Authorization")
+  console.log(authToken?.name + "쿠키이름" ,authToken?.value);
+  const [cocktailData, glassData, methodData, ingredientData] = await Promise.all([
+    getAllCocktail(),
+    getGlass(),
+    getMethod(),
+    getAllIngredients()
+  ]);
   const cocktails = cocktailData.body;
   const glass = glassData.body;
   const method = methodData.body;
@@ -35,10 +46,10 @@ async function CocktailsPage() {
 
   return (
     <>
-        <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients}/>
-        {/* {JSON.stringify(cocktails)} */}
+      <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients}/>
+      {/* {JSON.stringify(cocktails)} */}
     </>
-  )
+  );
 }
 
 export default CocktailsPage;

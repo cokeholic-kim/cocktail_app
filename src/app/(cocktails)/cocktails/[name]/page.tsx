@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/app/(common)/common";
 import Image from "next/image";
+import { fetchWithCookie } from "../page";
 
 interface Cocktail {
     cocktailName: string;
@@ -20,9 +21,7 @@ interface Cocktail {
   }
 
 async function getDetailCocktail(name : string){
-    return fetch(BASE_URL + "/cocktail/getDetail/" + name).then((response) =>
-        response.json()
-      );
+    return fetchWithCookie(`${BASE_URL}/cocktail/getDetail/${name}`, "Authorization");
 }
 
 

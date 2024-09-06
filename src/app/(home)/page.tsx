@@ -2,6 +2,7 @@ import { BASE_URL } from "../(common)/common";
 import { CocktailCardProps } from "../(common)/commonProps";
 import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
+import { fetchWithCookie } from "../(cocktails)/cocktails/page";
 
 export interface banner {
   imagePath: string;
@@ -10,21 +11,18 @@ export interface banner {
   order: number;
 }
 
+
 async function getCocktail() {
-  return fetch(`${BASE_URL}/cocktail/getAll`).then((response) =>
-    response.json()
-  );
+  return fetchWithCookie(`${BASE_URL}/cocktail/getAll`,"Authorization")
 }
 
 async function getBanner() {
-  return fetch(`${BASE_URL}/banner/getAllBanner`).then((response) =>
-    response.json()
-  );
+  return fetchWithCookie(`${BASE_URL}/banner/getAllBanner`,"Authorization")
 }
 
 export default async function Home() {
-  const cocktails = await getCocktail();
-  const bannersData = await getBanner();
+  const [cocktails,bannersData] = await Promise.all([getCocktail(),getBanner()])
+
   const banners: banner[] = bannersData.body;
 
   return (

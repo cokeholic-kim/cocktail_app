@@ -120,9 +120,6 @@ export function TopNavigation() {
                 >
                   logout
                 </div>
-                <div>
-                  <button onClick={handlePost}>테스트 버튼</button>
-                </div>
               </div>
             )}
            

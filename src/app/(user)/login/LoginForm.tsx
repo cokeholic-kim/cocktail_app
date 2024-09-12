@@ -41,7 +41,6 @@ function LoginForm() {
    }
 
    const onNaverLogin = () => {
-    alert(BASE_URL + "/oauth2/authorization/naver")
     window.location.href = BASE_URL + "/oauth2/authorization/naver";
    }
 

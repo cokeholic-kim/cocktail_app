@@ -1,10 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Ingredient } from './../../(ingredients)/ingredients/page';
 import SimpleIngredientCard from "./SimpleIngredientCard";
 import IngredientCard from "@/app/(ingredients)/ingredients/IngredientCard";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Scrollbar } from 'swiper/modules';
+import SwiperCore from "swiper"
 
 interface ResponseData {
   cocktailName : string,
@@ -17,6 +20,7 @@ export interface IngredientChecked extends Ingredient {
 }
 
 function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
+    const swiperRef = useRef<SwiperCore>();
     const [ingredientData,setIngredientData] = useState<IngredientChecked[]>([])
     const [searchValue,setSearchValue] = useState("")
     const [checkedIngredients, setCheckedIngredients] = useState<IngredientChecked[]>([]);
@@ -25,13 +29,11 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
       setIngredientData(ingredients)
     },[])
 
-    // const filteredIngredients = ingredientData.filter((ingredient) =>
-    //     ingredient.ingredientName.includes(searchValue)
-    //   );
-
-    // const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    //     setSearchValue(e.target.value)
-    // }
+    useEffect(()=> {
+      if (swiperRef.current) {
+        swiperRef.current.slideTo(checkedIngredients.length - 1);
+      }
+    },[checkedIngredients])
 
     const handleCheck = (ingredient: IngredientChecked) => {
       setIngredientData((prevIngredientData) =>
@@ -91,10 +93,28 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
         </Link>
       )}
 
-      <div className="flex justify-start flex-wrap min-h-28">
-        {checkedIngredients.map((ingredient, index) => {
-          return <IngredientCard key={index} ingredient={ingredient} />;
-        })}
+      <div className="min-h-28">
+        <Swiper
+        onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+        }}
+        modules={[Navigation, Scrollbar]}
+        spaceBetween={20}
+        slidesPerView={4}
+        scrollbar={{
+            el: ".swiper-scrollbar",
+            draggable: true,
+        }}
+        >
+       
+          {checkedIngredients.map((ingredient, index)=> {
+            return (
+              <SwiperSlide key={index}>
+                <IngredientCard ingredient={ingredient} />
+              </SwiperSlide>
+            )
+          })}
+        </Swiper>
       </div>
       <h1>Not Checked Ingredients</h1>
       <div className="flex justify-start flex-wrap">

@@ -1,11 +1,11 @@
 {
     "theme_color": "#ffd400",
-    "background_color": "#3333",
+    "background_color": "#544545",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
     "name": "술래",
-    "short_name": "술래",
+    "short_name": "Soolae",
     "description": "술래에서 내 취향 찾기",
     "icons": [
         {

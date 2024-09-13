@@ -101,6 +101,16 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
         modules={[Navigation, Scrollbar]}
         spaceBetween={20}
         slidesPerView={4}
+        breakpoints={{
+          // 모바일 화면 (640px 이하)에서는 slidesPerView를 2로 설정
+          640: {
+              slidesPerView: 2,
+          },
+          // 그 외의 화면에서는 slidesPerView를 4로 설정
+          1024: {
+              slidesPerView: 4,
+          },
+        }}
         scrollbar={{
             el: ".swiper-scrollbar",
             draggable: true,

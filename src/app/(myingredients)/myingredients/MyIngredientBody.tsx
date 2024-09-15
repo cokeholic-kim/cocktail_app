@@ -65,17 +65,6 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
 
   return (
     <>
-      <nav
-        className={`flex justify-between items-center px-6 py-5   w-full z-10 transition-all duration-500 "bg-black"`}
-      >
-        <input
-          className="bg-gray-800 rounded-md text-white px-3 py-2 w-96 focus:outline-none"
-          type="text"
-          placeholder="재료를 검색해 주세요"
-          onChange={(e)=>setSearchValue(e.target.value)}
-        />
-      </nav>
-      <h1>My Ingredient</h1>
       {/* <button className="button" onClick={()=> handleClick}>find cocktail</button> */}
       {checkedIngredients.length > 0 && (
         <Link
@@ -87,46 +76,63 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
               ),
             },
           }}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="m-3 float-right inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           칵테일 찾기
         </Link>
       )}
 
       <div className="min-h-28">
-        <Swiper
-        onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-        }}
-        modules={[Navigation, Scrollbar]}
-        spaceBetween={20}
-        slidesPerView={4}
-        breakpoints={{
-          // 모바일 화면 (640px 이하)에서는 slidesPerView를 2로 설정
-          640: {
-              slidesPerView: 2,
-          },
-          // 그 외의 화면에서는 slidesPerView를 4로 설정
-          1024: {
-              slidesPerView: 4,
-          },
-        }}
-        scrollbar={{
-            el: ".swiper-scrollbar",
-            draggable: true,
-        }}
-        >
+        {
+          checkedIngredients.length > 0 ? 
+          <Swiper
+          onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+          }}
+          modules={[Navigation, Scrollbar]}
+          spaceBetween={20}
+          // slidesPerView={4}
+          breakpoints={{
+            // 모바일 화면 (640px 이하)에서는 slidesPerView를 2로 설정
+            0: {
+                slidesPerView: 2,
+            },
+            // 그 외의 화면에서는 slidesPerView를 4로 설정
+            1024: {
+                slidesPerView: 4,
+            },
+          }}
+          scrollbar={{
+              el: ".swiper-scrollbar",
+              draggable: true,
+          }}
+          >
+         
+            {checkedIngredients.map((ingredient, index)=> {
+              return (
+                <SwiperSlide key={index}>
+                  <IngredientCard ingredient={ingredient} size={" "}/>
+                </SwiperSlide>
+              )
+            })}
+          </Swiper> :
+          <div className="min-h-28 flex justify-center items-center">
+            <p className="text-lg font-bold">재료를 선택하고 만들수있는 칵테일을 검색!</p>
+          </div>
+        }
+
        
-          {checkedIngredients.map((ingredient, index)=> {
-            return (
-              <SwiperSlide key={index}>
-                <IngredientCard ingredient={ingredient} />
-              </SwiperSlide>
-            )
-          })}
-        </Swiper>
       </div>
-      <h1>Not Checked Ingredients</h1>
+      <nav
+        className={`flex justify-between items-center px-6 py-5   w-full z-10 transition-all duration-500 "bg-black"`}
+      >
+        <input
+          className="bg-gray-800 rounded-md text-white px-3 py-2 w-full focus:outline-none"
+          type="text"
+          placeholder="재료를 검색해 주세요"
+          onChange={(e)=>setSearchValue(e.target.value)}
+        />
+      </nav>
       <div className="flex justify-start flex-wrap">
       {searchValue === "" ? 
     ingredientData.map((ingredient, index) => (

@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { Ingredient } from './page';
 
 
-function IngredientCard({ingredient}: {ingredient: Ingredient}) {
+function IngredientCard({ingredient,size}: {ingredient: Ingredient,size:string}) {
   return (
-    <div className="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className={`p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ${size.length > 0 ? size : ''}`}>
       <div className="w-full h-44 mb-4 relative">
       <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
       <Image

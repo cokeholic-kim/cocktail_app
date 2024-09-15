@@ -16,11 +16,12 @@ interface formProps {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>, setNewIngredientPage: React.Dispatch<React.SetStateAction<boolean>>) => Promise<void>;
   setNewIngredientPage: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 function Form({handleChange,handleSubmit,setNewIngredientPage}:formProps){
 
     return (
         <form id="signup-form" method='post' onSubmit={(event) => handleSubmit(event,setNewIngredientPage)}   
-          className='bg-white rounded p-10' style={{width:"48%"}}
+          className=' flex flex-col justify-between  bg-white rounded p-10' style={{width:"48%"}}
         >
             <div className="mb-4">
               <label
@@ -141,7 +142,7 @@ export default function NewIngredientForm({setNewIngredientPage}:{setNewIngredie
       formData.append("description", newIngredient.description);
       formData.append("category", newIngredient.category);
       try{
-        const authToken = getCookie("authToken")
+        const authToken = getCookie("Authorization")
         const response = await fetch(`${BASE_URL}/user/ingredientRegister`,{
           method: "POST",
           headers: {
@@ -195,14 +196,14 @@ export default function NewIngredientForm({setNewIngredientPage}:{setNewIngredie
     };
   
     return (
-      <div className="flex w-full justify-between">
+      <div className="flex w-full h-full justify-between">
         <Form handleChange={handleChange} handleSubmit={handleSubmit} setNewIngredientPage={setNewIngredientPage}/>
-        <div className="bg-white rounded  h-full p-10" style={{ width: "48%" }}>
+        <div className="bg-white rounded p-10" style={{ width: "48%" }}>
           {newIngredient.image  &&  (
             <div className="w-full mb-4 relative" style={{ height: "30vh" }}>
               <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                 <Image
-                  src={URL.createObjectURL(newIngredient.image)}
+                  src={newIngredient.image.name ? URL.createObjectURL(newIngredient.image):"/assets/questionMark.png"}
                   alt="Uploaded Cocktail"
                   width={400}
                   height={400}

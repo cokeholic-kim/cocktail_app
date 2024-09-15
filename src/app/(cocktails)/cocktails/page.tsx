@@ -47,7 +47,6 @@ async function CocktailsPage() {
   return (
     <>
       <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients}/>
-      {/* {JSON.stringify(cocktails)} */}
     </>
   );
 }

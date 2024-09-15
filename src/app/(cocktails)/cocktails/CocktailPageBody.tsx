@@ -12,7 +12,6 @@ function CocktailPageBody({cocktails,glass,method,ingredients}:{cocktails:Cockta
 
   return (
     <>
-      <div>술래 공식 칵테일</div>
       <div className="flex justify-start flex-wrap">
         {cocktails.map((cocktail: Cocktail, index: number) => {
           if(cocktail.status === "ADMIN_REGISTERED")

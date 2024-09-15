@@ -9,7 +9,6 @@ function FitCocktail() {
     
   return (
     <Suspense fallback={<div>...Loading</div>}>
-
       <Ingredients></Ingredients>
     </Suspense>
   )

@@ -23,9 +23,9 @@ function FitCocktailCard({data}:{data:CocktailFit}) {
       </div>
       <div className="mb-4">
         <p
-          className={`font-normal text-lg ${
+          className={`font-bold  text-lg ${
             data.excludeIngredient.length === 0
-              ? "text-yellow-300 dark:text-yellow-400"
+              ? "text-green-600 dark:text-green-400"
               : "text-gray-700 dark:text-gray-400"
           }`}
         >

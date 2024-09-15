@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/app/(common)/common";
-import IngredientCard from "./IngredientCard";
 import { fetchWithCookie } from "@/app/(cocktails)/cocktails/page";
+import IngredientPageBody from "./IngredientPageBody";
 
 export interface Ingredient {
     ingredientName: string;
@@ -23,14 +23,8 @@ async function IngredientsPage() {
     const ingredientsData = await getCocktail();
     const ingredients = ingredientsData.body;
   return (
+    <IngredientPageBody ingredients={ingredients}/>
     
-    <div className="flex justify-start flex-wrap">
-        {
-            ingredients.map((Ingredient:Ingredient,index:number) => {
-                return <IngredientCard key={index} ingredient={Ingredient}/>
-            })
-        }
-    </div>
   )
 }
 

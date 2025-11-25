@@ -1,38 +1,26 @@
 import { BASE_URL } from "@/app/(common)/common";
 import CocktailPageBody from "./CocktailPageBody";
 import { cookies } from "next/headers";
-
-export async function fetchWithCookie(url:string, cookieName:string) {
-  const authToken = cookies().get(cookieName);
-  const headers = {
-      'Cookie': authToken?.value ? `${cookieName}=${authToken.value}` : "",
-      'Content-Type': 'application/json'
-  };
-  return fetch(url, {
-      headers,
-      credentials: 'include'
-  }).then(response => response.json());
-}
+import { fetchWithCookie, AUTH_COOKIE_NAME } from "@/app/(common)/fetchUtils";
 
 async function getAllCocktail() {
-  return fetchWithCookie(BASE_URL + "/cocktail/getAll", "Authorization");
+  return fetchWithCookie(BASE_URL + "/cocktail/getAll", AUTH_COOKIE_NAME);
 }
 
 async function getGlass() {
-  return fetchWithCookie(BASE_URL + "/cocktail/glass", "Authorization");
+  return fetchWithCookie(BASE_URL + "/cocktail/glass", AUTH_COOKIE_NAME);
 }
 
 async function getMethod() {
-  return fetchWithCookie(BASE_URL + "/cocktail/method", "Authorization");
+  return fetchWithCookie(BASE_URL + "/cocktail/method", AUTH_COOKIE_NAME);
 }
 
 async function getAllIngredients() {
-  return fetchWithCookie(BASE_URL + "/ingredient/getAll", "Authorization");
+  return fetchWithCookie(BASE_URL + "/ingredient/getAll", AUTH_COOKIE_NAME);
 }
 
 async function CocktailsPage() {
-  const authToken = cookies().get("Authorization")
-  console.log(authToken?.name + "쿠키이름" ,authToken?.value);
+  const authToken = cookies().get(AUTH_COOKIE_NAME)
   const [cocktailData, glassData, methodData, ingredientData] = await Promise.all([
     getAllCocktail(),
     getGlass(),
@@ -46,7 +34,7 @@ async function CocktailsPage() {
 
   return (
     <>
-      <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients}/>
+      <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients} />
     </>
   );
 }

@@ -2,7 +2,7 @@ import { BASE_URL } from "../(common)/common";
 import { CocktailCardProps } from "../(common)/commonProps";
 import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
-import { fetchWithCookie } from "../(cocktails)/cocktails/page";
+import { fetchWithCookie, AUTH_COOKIE_NAME } from "../(common)/fetchUtils";
 
 export interface banner {
   imagePath: string;
@@ -13,21 +13,21 @@ export interface banner {
 
 
 async function getCocktail() {
-  return fetchWithCookie(`${BASE_URL}/cocktail/getAll`,"Authorization")
+  return fetchWithCookie(`${BASE_URL}/cocktail/getAll`, AUTH_COOKIE_NAME)
 }
 
 async function getBanner() {
-  return fetchWithCookie(`${BASE_URL}/banner/getAllBanner`,"Authorization")
+  return fetchWithCookie(`${BASE_URL}/banner/getAllBanner`, AUTH_COOKIE_NAME)
 }
 
 export default async function Home() {
-  const [cocktails,bannersData] = await Promise.all([getCocktail(),getBanner()])
+  const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()])
 
   const banners: banner[] = bannersData.body;
 
   return (
     <>
-      <MainBanner banners={banners}/>
+      <MainBanner banners={banners} />
       <div className="flex justify-start flex-wrap">
         {cocktails.body.map((cocktail: CocktailCardProps, index: number) => {
           return (

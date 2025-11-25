@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: ['s3.ap-northeast-2.amazonaws.com','wallpapers.com'],
   },
+  output: 'standalone',
 };
 
 export default withPWA({

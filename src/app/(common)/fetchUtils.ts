@@ -22,7 +22,6 @@ export async function fetchWithCookie<T>(url: string, cookieName: string = AUTH_
   try {
     const response = await fetch(url, {
       headers,
-      credentials: "include",
     });
 
     if (!response.ok) {

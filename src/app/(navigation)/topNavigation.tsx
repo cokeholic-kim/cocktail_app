@@ -7,14 +7,10 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { getCookie, setCookie } from "cookies-next";
-import { BASE_URL, DOMAIN_NAME } from "../(common)/common";
+import { AUTH_COOKIE_NAME } from "../(common)/fetchUtils";
 
 const clearAuthorizationCookie = () => {
-  setCookie('Authorization', '', { 
-    domain: DOMAIN_NAME, 
-    path: '/', 
-    maxAge: -1 
-  });
+  setCookie(AUTH_COOKIE_NAME, '', { path: "/", maxAge: -1 });
 };
 
 export function TopNavigation() {
@@ -22,8 +18,7 @@ export function TopNavigation() {
     const { isLogin , setIsLogin } = useLoginContext();
 
     useEffect(() => {
-      const authToken = getCookie('Authorization');
-      console.log(authToken);
+      const authToken = getCookie(AUTH_COOKIE_NAME);
       if(authToken){
         setIsLogin(true);
       }
@@ -33,11 +28,10 @@ export function TopNavigation() {
       if (!isLogin) return;
 
       const timer = setInterval(() => {
-        const authToken = getCookie('Authorization');
+        const authToken = getCookie(AUTH_COOKIE_NAME);
         
         if(!authToken){
           setIsLogin(false);
-          clearAuthorizationCookie();
         }
       }, 600000);
 
@@ -49,22 +43,11 @@ export function TopNavigation() {
       clearAuthorizationCookie();
     }
 
-    const handlePost = () => {
-      const authToken = getCookie('Authorization')
-      fetch(`${BASE_URL}/user/saveCocktail`, {
-        method: "POST",
-        headers: {
-          "Authorization": `${authToken}`
-        },
-        body: "",
-      });
-    }
-    
     return (
       <nav className="bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between">
-            {/* 硫붾돱1 */}
+            {/* logo section */}
             <div className="flex pace-x-4">
               <div>
                 <Link
@@ -81,27 +64,9 @@ export function TopNavigation() {
                 </Link>
               </div>
               <div className="hidden md:flex items-center space-x-1">
-                {/* <Link
-                  href={"/cocktails"}
-                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
-                >
-                  移듯뀒??
-                </Link>
-                <Link
-                  href={"/ingredients"}
-                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
-                >
-                  ?щ즺 紐⑸줉
-                </Link>
-                <Link
-                  href={"/myingredients"}
-                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
-                >
-                  ?섏쓽 ?щ즺
-                </Link> */}
               </div>
             </div>
-            {/* 硫붾돱2 */}
+            {/* auth actions */}
             {!isLogin ? (
               <div className="hidden md:flex items-center space-x-1">
                 <Link href={"/login"} className="py-5 px-3">
@@ -124,9 +89,6 @@ export function TopNavigation() {
                 </div>
               </div>
             )}
-           
-     
-
             {/* mobile menu */}
             <div className="md:hidden flex items-center text-black">
               <button onClick={() => setMenuToggle(!menuToggle)}>
@@ -174,27 +136,6 @@ export function TopNavigation() {
                 : 
                 (<div onClick={handleLogout} className="block py-2 px-4 text-sm hover:bg-gray-200" >Logout</div>)
                 }
-          {/* <Link
-                  href={"/cocktails"}
-                  className="block py-2 px-4 text-sm hover:bg-gray-200"
-                  onClick={()=>setMenuToggle(false)}
-                >
-                  移듯뀒??
-                </Link>
-                <Link
-                  href={"/ingredients"}
-                  className="block py-2 px-4 text-sm hover:bg-gray-200"
-                  onClick={()=>setMenuToggle(false)}
-                >
-                  ?щ즺 紐⑸줉
-                </Link>
-                <Link
-                  href={"/myingredients"}
-                  className="block py-2 px-4 text-sm hover:bg-gray-200"
-                  onClick={()=>setMenuToggle(false)}
-                >
-                  ?섏쓽 ?щ즺
-                </Link> */}
         </div>
       </nav>
     );

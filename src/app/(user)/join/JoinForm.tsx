@@ -15,27 +15,21 @@ function JoinForm() {
     const isValid = !nameError && !emailError && !passwordError && name.length > 0 && email.length > 0 && password.length > 0;
   
     const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName((prevName) => {
-          const newName = e.target.value;
-          setValid(isValidName, setNameError, newName);
-          return newName;
-        });
+        const newName = e.target.value;
+        setValid(isValidName, setNameError, newName);
+        setName(newName);
       };
       
       const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail((prevEmail) => {
-          const newEmail = e.target.value;
-          setValid(isValidEmail, setEmailError, newEmail);
-          return newEmail;
-        });
+        const newEmail = e.target.value;
+        setValid(isValidEmail, setEmailError, newEmail);
+        setEmail(newEmail);
       };
 
     const onChangePassword = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setPassword((prevPassword) => {
-            const newPassword = e.target.value;
-            setValid(isValidPassword, setPasswordError, newPassword)
-            return newPassword;
-        });
+        const newPassword = e.target.value;
+        setValid(isValidPassword, setPasswordError, newPassword)
+        setPassword(newPassword);
     }
 
     function setValid(

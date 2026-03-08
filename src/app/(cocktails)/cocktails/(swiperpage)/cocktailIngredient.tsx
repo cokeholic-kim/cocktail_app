@@ -20,6 +20,10 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
   >([]);
   const [newIngredientPage, setNewIngredientPage] = useState(false);
 
+  useEffect(() => {
+    setIngredientData(ingredients);
+  }, [ingredients]);
+
   const handleClickNewIngredient = () => {
     setNewIngredientPage(!newIngredientPage);
   };

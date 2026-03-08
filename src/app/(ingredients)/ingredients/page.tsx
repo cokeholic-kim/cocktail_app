@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/app/(common)/common";
-import { fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { AUTH_COOKIE_NAME, fetchWithCookie } from "@/app/(common)/fetchUtils";
 import IngredientPageBody from "./IngredientPageBody";
 
 type ApiEnvelope<T> = {
@@ -19,14 +19,14 @@ interface UsedCocktail {
   imagePath: string;
 }
 
-async function getCocktail() {
-  return fetchWithCookie<ApiEnvelope<Ingredient[]>>(`${BASE_URL}/ingredient/getAll`, "Authorization", {
+async function getIngredients() {
+  return fetchWithCookie<ApiEnvelope<Ingredient[]>>(`${BASE_URL}/ingredient/getAll`, AUTH_COOKIE_NAME, {
     fallback: { body: [] },
   })
 }
 
 async function IngredientsPage() {
-  const ingredientsData = await getCocktail();
+  const ingredientsData = await getIngredients();
   if (!ingredientsData.ok) {
     return (
       <div className="m-6 text-sm rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">

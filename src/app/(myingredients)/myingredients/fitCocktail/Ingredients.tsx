@@ -29,12 +29,23 @@ const sendIngredientsToAPI = async (ingredientNames: string[]) => {
       body: JSON.stringify(jsondata),
     });
 
+    const responseText = await response.text();
+    let responseData: { body?: CocktailFit[] } | null = null;
+    try {
+      responseData = responseText ? JSON.parse(responseText) : null;
+    } catch (error) {
+      console.error("Response is not valid JSON:", error);
+    }
+
     if (!response.ok) {
+      console.error("Error sending ingredients to API:", {
+        status: response.status,
+        body: responseData ?? responseText,
+      });
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
-    return data.body ?? [];
+    return responseData?.body ?? [];
   } catch (error) {
     console.error('Error sending ingredients to API:', error);
     return [];

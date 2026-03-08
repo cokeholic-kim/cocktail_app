@@ -25,7 +25,8 @@ interface Ingredient {
 }
 
 async function getDetailCocktail(name: string) {
-    return fetchWithCookie<ApiEnvelope<Cocktail | null>>(`${BASE_URL}/cocktail/getDetail/${name}`, "Authorization", {
+    const encodedName = encodeURIComponent(name);
+    return fetchWithCookie<ApiEnvelope<Cocktail | null>>(`${BASE_URL}/cocktail/getDetail/${encodedName}`, "Authorization", {
       fallback: { body: null },
     });
 }

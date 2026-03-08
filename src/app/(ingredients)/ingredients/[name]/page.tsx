@@ -28,7 +28,6 @@ async function IngredientDetai({ params }: { params: Promise<{ name: string }> }
     const ingreident: Ingredient = ingredientData.data.body;
     return (
         <div className="text-black">
-            {/* {JSON.stringify(ingredientData)} */}
             <div className="w-full h-96 relative -mb-8 -z-10">
                 <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                     <Image

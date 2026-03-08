@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # ===========================================================================
+  # Frontend Service (Next.js)
+  # ===========================================================================
+  frontend:
+    container_name: cocktail-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://soolae:8080
+        NEXT_PUBLIC_DOMAIN_NAME: soolae
+    ports:
+      - "3000:3000"
+    environment:
+      # Runtime API endpoint used by server-side code.
+      SERVER_API_URL: http://cocktail-backend:8080
+      # Public API URL used at build time for client-side bundle.
+      NEXT_PUBLIC_API_URL: http://soolae:8080
+    networks:
+      - cocktail-net
+    # Keep local bind mounts for source updates during development.
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - /app/node_modules
+
+networks:
+  cocktail-net:
+    external: true

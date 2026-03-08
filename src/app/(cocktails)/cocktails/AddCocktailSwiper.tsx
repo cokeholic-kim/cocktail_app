@@ -33,7 +33,7 @@ export interface CocktailRequest {
 }
 
 function AddCocktailSwiper({glass,method,ingredients}:{glass:string[],method:string[],ingredients:Ingredient[]}) {
-    const swiperRef = useRef<SwiperCore>();
+    const swiperRef = useRef<SwiperCore | null>(null);
     const [cocktailRequest, setCocktailRequest] = useState<CocktailRequest>({
       username: 'kimadonghyon4574@gmail.com',
       cocktailName: '',

@@ -1,7 +1,7 @@
 "use client"
 import { BASE_URL } from '@/app/(common)/common';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 function JoinForm() {
     const [name, setName] = useState('');
@@ -10,37 +10,26 @@ function JoinForm() {
     const [nameError, setNameError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
-    const [isValid, setIsValid] = useState(false);
     const router = useRouter();
-  
-    useEffect(() => {
-      if(!nameError && !emailError && !passwordError && name.length > 0 && email.length > 0 && password.length > 0){
-        setIsValid(true);
-      }else{setIsValid(false)}
-    }, [nameError, emailError, passwordError, name, email, password]);
+
+    const isValid = !nameError && !emailError && !passwordError && name.length > 0 && email.length > 0 && password.length > 0;
   
     const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName((prevName) => {
-          const newName = e.target.value;
-          setValid(isValidName, setNameError, newName);
-          return newName;
-        });
+        const newName = e.target.value;
+        setValid(isValidName, setNameError, newName);
+        setName(newName);
       };
       
       const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEmail((prevEmail) => {
-          const newEmail = e.target.value;
-          setValid(isValidEmail, setEmailError, newEmail);
-          return newEmail;
-        });
+        const newEmail = e.target.value;
+        setValid(isValidEmail, setEmailError, newEmail);
+        setEmail(newEmail);
       };
 
     const onChangePassword = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setPassword((prevPassword) => {
-            const newPassword = e.target.value;
-            setValid(isValidPassword, setPasswordError, newPassword)
-            return newPassword;
-        });
+        const newPassword = e.target.value;
+        setValid(isValidPassword, setPasswordError, newPassword)
+        setPassword(newPassword);
     }
 
     function setValid(

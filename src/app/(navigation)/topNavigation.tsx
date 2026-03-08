@@ -4,65 +4,50 @@ import Image from "next/image";
 import Link from "next/link";
 import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { getCookie, setCookie } from "cookies-next";
-import { BASE_URL, DOMAIN_NAME } from "../(common)/common";
+import { AUTH_COOKIE_NAME } from "../(common)/constants";
+
+const clearAuthorizationCookie = () => {
+  setCookie(AUTH_COOKIE_NAME, '', { path: "/", maxAge: -1 });
+};
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
     const { isLogin , setIsLogin } = useLoginContext();
 
-    const deleteCookie = (name:string) => {
-      setCookie(name, '', { 
-        domain: DOMAIN_NAME, 
-        path: '/', 
-        maxAge: -1 
-      });
-    };
-
     useEffect(() => {
-      const authToken = getCookie('Authorization');
-      console.log(authToken);
+      const authToken = getCookie(AUTH_COOKIE_NAME);
       if(authToken){
         setIsLogin(true);
       }
-    }, []);
+    }, [setIsLogin]);
+
+    useEffect(() => {
+      if (!isLogin) return;
+
+      const timer = setInterval(() => {
+        const authToken = getCookie(AUTH_COOKIE_NAME);
+        
+        if(!authToken){
+          setIsLogin(false);
+        }
+      }, 600000);
+
+      return () => clearInterval(timer);
+    }, [isLogin, setIsLogin]);
 
     const handleLogout = () => {
       setIsLogin(false);
-      deleteCookie('Authorization');
+      clearAuthorizationCookie();
     }
 
-    const checkCookieExpiration = () => {
-      const authToken = getCookie('Authorization');
-      
-      if(!authToken){
-        setIsLogin(false);
-        deleteCookie('Authorization');
-      }
-    }
-
-    if(isLogin){
-      setInterval(checkCookieExpiration,600000);
-    }
-
-    const handlePost = () => {
-      const authToken = getCookie('Authorization')
-      fetch(`${BASE_URL}/user/saveCocktail`, {
-        method: "POST",
-        headers: {
-          "Authorization": `${authToken}`
-        },
-        body: "",
-      });
-    }
-    
     return (
       <nav className="bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between">
-            {/* 메뉴1 */}
+            {/* logo section */}
             <div className="flex pace-x-4">
               <div>
                 <Link
@@ -79,27 +64,9 @@ export function TopNavigation() {
                 </Link>
               </div>
               <div className="hidden md:flex items-center space-x-1">
-                {/* <Link
-                  href={"/cocktails"}
-                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
-                >
-                  칵테일
-                </Link>
-                <Link
-                  href={"/ingredients"}
-                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
-                >
-                  재료 목록
-                </Link>
-                <Link
-                  href={"/myingredients"}
-                  className="py-5 px-3 text-gray-700 hover:text-gray-900"
-                >
-                  나의 재료
-                </Link> */}
               </div>
             </div>
-            {/* 메뉴2 */}
+            {/* auth actions */}
             {!isLogin ? (
               <div className="hidden md:flex items-center space-x-1">
                 <Link href={"/login"} className="py-5 px-3">
@@ -122,9 +89,6 @@ export function TopNavigation() {
                 </div>
               </div>
             )}
-           
-     
-
             {/* mobile menu */}
             <div className="md:hidden flex items-center text-black">
               <button onClick={() => setMenuToggle(!menuToggle)}>
@@ -172,29 +136,7 @@ export function TopNavigation() {
                 : 
                 (<div onClick={handleLogout} className="block py-2 px-4 text-sm hover:bg-gray-200" >Logout</div>)
                 }
-          {/* <Link
-                  href={"/cocktails"}
-                  className="block py-2 px-4 text-sm hover:bg-gray-200"
-                  onClick={()=>setMenuToggle(false)}
-                >
-                  칵테일
-                </Link>
-                <Link
-                  href={"/ingredients"}
-                  className="block py-2 px-4 text-sm hover:bg-gray-200"
-                  onClick={()=>setMenuToggle(false)}
-                >
-                  재료 목록
-                </Link>
-                <Link
-                  href={"/myingredients"}
-                  className="block py-2 px-4 text-sm hover:bg-gray-200"
-                  onClick={()=>setMenuToggle(false)}
-                >
-                  나의 재료
-                </Link> */}
         </div>
       </nav>
     );
-  }
-
+}

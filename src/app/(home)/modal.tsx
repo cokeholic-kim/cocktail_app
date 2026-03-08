@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import React, { useState } from 'react';
 
 interface ModalProps {
@@ -26,10 +27,13 @@ function Modal({ isOpen, onClose, cocktailData }: ModalProps) {
           <div className="px-4 py-5 sm:p-6">
             <div className="grid grid-cols-1 gap-6">
               <div>
-                <img
+                <Image
+                  width={1200}
+                  height={675}
                   src={cocktailData.imagePath}
                   alt={cocktailData.name}
                   className="w-full h-auto rounded-lg"
+                  priority
                 />
               </div>
               <div>

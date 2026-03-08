@@ -6,23 +6,25 @@ import { FooterNavigation } from "./(navigation)/footerNavigation";
 import { LoginContextProvider } from "./(context)/LoginContext";
 
 const inter = Inter({ subsets: ["latin"] });
+
 export const viewport = {
-  themeColor : "#ffd400"
+  themeColor: "#ffd400",
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {
-  title: { 
-    template:"%s | Sool lae",
+  title: {
+    template: "%s | Sool lae",
     default: "Sool lae"
   },
   description: "숨은 나의 주류취향 , 칵테일 주류 검색 부터 추천까지 술래에서 찾아보세요.",
-  manifest:"/manifest.json",
-  viewport:
-    "minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, viewport-fit=cover",
+  manifest: "/manifest.json",
 };
 
-export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) 
-{
+export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
 
   return (
     <html lang="en">

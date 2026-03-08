@@ -1,52 +1,57 @@
 import { BASE_URL } from "@/app/(common)/common";
 import CocktailPageBody from "./CocktailPageBody";
 import { cookies } from "next/headers";
+import { fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
+import type { Cocktail } from "@/app/(cocktails)/typeinterface";
+import type { Ingredient } from "@/app/(ingredients)/ingredients/page";
 
-export async function fetchWithCookie(url:string, cookieName:string) {
-  const authToken = cookies().get(cookieName);
-  const headers = {
-      'Cookie': authToken?.value ? `${cookieName}=${authToken.value}` : "",
-      'Content-Type': 'application/json'
-  };
-  return fetch(url, {
-      headers,
-      credentials: 'include'
-  }).then(response => response.json());
+type ApiEnvelope<T> = {
+  body: T;
 }
 
 async function getAllCocktail() {
-  return fetchWithCookie(BASE_URL + "/cocktail/getAll", "Authorization");
+  return fetchWithCookie<ApiEnvelope<Cocktail[]>>(BASE_URL + "/cocktail/getAll", AUTH_COOKIE_NAME, {
+    fallback: { body: [] },
+  });
 }
 
 async function getGlass() {
-  return fetchWithCookie(BASE_URL + "/cocktail/glass", "Authorization");
+  return fetchWithCookie<ApiEnvelope<string[]>>(BASE_URL + "/cocktail/glass", AUTH_COOKIE_NAME, {
+    fallback: { body: [] },
+  });
 }
 
 async function getMethod() {
-  return fetchWithCookie(BASE_URL + "/cocktail/method", "Authorization");
+  return fetchWithCookie<ApiEnvelope<string[]>>(BASE_URL + "/cocktail/method", AUTH_COOKIE_NAME, {
+    fallback: { body: [] },
+  });
 }
 
 async function getAllIngredients() {
-  return fetchWithCookie(BASE_URL + "/ingredient/getAll", "Authorization");
+  return fetchWithCookie<ApiEnvelope<Ingredient[]>>(BASE_URL + "/ingredient/getAll", AUTH_COOKIE_NAME, {
+    fallback: { body: [] },
+  });
 }
 
 async function CocktailsPage() {
-  const authToken = cookies().get("Authorization")
-  console.log(authToken?.name + "쿠키이름" ,authToken?.value);
+  const authToken = (await cookies()).get(AUTH_COOKIE_NAME)
   const [cocktailData, glassData, methodData, ingredientData] = await Promise.all([
     getAllCocktail(),
     getGlass(),
     getMethod(),
     getAllIngredients()
   ]);
-  const cocktails = cocktailData.body;
-  const glass = glassData.body;
-  const method = methodData.body;
-  const ingredients = ingredientData.body;
+  const hasError = !cocktailData.ok || !glassData.ok || !methodData.ok || !ingredientData.ok;
+  const cocktails = cocktailData.data.body;
+  const glass = glassData.data.body;
+  const method = methodData.data.body;
+  const ingredients = ingredientData.data.body;
 
   return (
     <>
-      <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients}/>
+      {hasError && <div className="m-6 text-sm rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">현재 백엔드가 일시적으로 응답하지 않습니다. 일부 데이터는 기본값으로 노출됩니다.</div>}
+      <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients} />
     </>
   );
 }

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 export const AUTH_COOKIE_NAME = "Authorization";
 
 export async function fetchWithCookie(url: string, cookieName: string = AUTH_COOKIE_NAME) {
-    const authToken = cookies().get(cookieName);
+    const authToken = (await cookies()).get(cookieName);
     const headers: Record<string, string> = {
         'Content-Type': 'application/json'
     };

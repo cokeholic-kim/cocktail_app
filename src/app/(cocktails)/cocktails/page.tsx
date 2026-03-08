@@ -20,7 +20,7 @@ async function getAllIngredients() {
 }
 
 async function CocktailsPage() {
-  const authToken = cookies().get(AUTH_COOKIE_NAME)
+  const authToken = (await cookies()).get(AUTH_COOKIE_NAME)
   const [cocktailData, glassData, methodData, ingredientData] = await Promise.all([
     getAllCocktail(),
     getGlass(),

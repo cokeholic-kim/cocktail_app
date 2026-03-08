@@ -1,38 +1,23 @@
 "use client"
 
-import Image from "next/image";
 import Link from "next/link";
 import { RiHome4Line,RiShoppingBasket2Line  } from "react-icons/ri";
 import { BiDrink } from "react-icons/bi";
 import { TbFilterSearch } from "react-icons/tb";
-import { useRouter } from "next/router";
-import { useParams, usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
 
 export function FooterNavigation() {
   const path = usePathname ();
-  const [footerState,setFooterState] = useState({
-    home:true,
-    cocktail:false,
-    ingredient:false,
-    myIngredient:false,
-  })
+  const footerState = useMemo(() => {
+    if (!path) return { home: false, cocktail: false, ingredient: false, myIngredient: false };
+    if (path === "/") return { home: true, cocktail: false, ingredient: false, myIngredient: false };
+    if (path.startsWith('/cocktails')) return { home: false, cocktail: true, ingredient: false, myIngredient: false };
+    if (path.startsWith('/ingredients')) return { home: false, cocktail: false, ingredient: true, myIngredient: false };
+    if (path.startsWith('/myingredients')) return { home: false, cocktail: false, ingredient: false, myIngredient: true };
 
-  useEffect(()=>{
-    if(path){
-      if (path === '/') {
-        setFooterState({ home: true, cocktail: false, ingredient: false, myIngredient: false });
-      } else if (path.startsWith('/cocktails')) {
-        setFooterState({ home: false, cocktail: true, ingredient: false, myIngredient: false });
-      } else if (path.startsWith('/ingredients')) {
-        setFooterState({ home: false, cocktail: false, ingredient: true, myIngredient: false });
-      } else if (path.startsWith('/myingredients')) {
-        setFooterState({ home: false, cocktail: false, ingredient: false, myIngredient: true });
-      } else {
-        setFooterState({ home: false, cocktail: false, ingredient: false, myIngredient: false });
-      }
-    }
-  },[path])
+    return { home: false, cocktail: false, ingredient: false, myIngredient: false };
+  }, [path]);
 
     return (
       <footer className="mt-2 bottom-0 w-full z-10 fixed">

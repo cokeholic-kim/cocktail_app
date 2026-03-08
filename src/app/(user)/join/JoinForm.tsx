@@ -1,7 +1,7 @@
 "use client"
 import { BASE_URL } from '@/app/(common)/common';
 import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 function JoinForm() {
     const [name, setName] = useState('');
@@ -10,14 +10,9 @@ function JoinForm() {
     const [nameError, setNameError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
-    const [isValid, setIsValid] = useState(false);
     const router = useRouter();
-  
-    useEffect(() => {
-      if(!nameError && !emailError && !passwordError && name.length > 0 && email.length > 0 && password.length > 0){
-        setIsValid(true);
-      }else{setIsValid(false)}
-    }, [nameError, emailError, passwordError, name, email, password]);
+
+    const isValid = !nameError && !emailError && !passwordError && name.length > 0 && email.length > 0 && password.length > 0;
   
     const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName((prevName) => {

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # ===========================================================================
+  # 프론트엔드 서비스 (Next.js)
+  # ===========================================================================
+  frontend:
+    container_name: cocktail-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # 서버 내부 요청용 API 주소 (컨테이너 네트워크)
+      SERVER_API_URL: http://cocktail-backend:8080
+      # 브라우저에서 쓰는 공개 API 주소
+      NEXT_PUBLIC_API_URL: http://soolae:8080
+    networks:
+      - cocktail-net
+    # 개발용 바인딩 마운트(소스 변경 즉시 반영)
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - /app/node_modules
+
+networks:
+  cocktail-net:
+    external: true

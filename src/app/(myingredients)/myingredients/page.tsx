@@ -1,14 +1,14 @@
 import { BASE_URL } from "@/app/(common)/common";
 import MyIngredientBody from "./MyIngredientBody"
-import { fetchWithCookie } from "@/app/(cocktails)/cocktails/page";
+import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 
 interface UsedCocktail {
-  cocktailName : string;
-  imagePath : string;
+  cocktailName: string;
+  imagePath: string;
 }
 
 async function getIngredient() {
-  return fetchWithCookie(`${BASE_URL}/ingredient/getAll`,"Authorization")
+  return fetchWithCookie(`${BASE_URL}/ingredient/getAll`, "Authorization")
 }
 
 async function MyIngredient() {
@@ -16,7 +16,7 @@ async function MyIngredient() {
   const ingredients = ingredientData.body;
   return (
     <div>
-      <MyIngredientBody ingredients = {ingredients}/>
+      <MyIngredientBody ingredients={ingredients} />
     </div>
   )
 }

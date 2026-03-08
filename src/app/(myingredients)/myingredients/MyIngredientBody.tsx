@@ -20,14 +20,10 @@ export interface IngredientChecked extends Ingredient {
 }
 
 function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
-    const swiperRef = useRef<SwiperCore>();
-    const [ingredientData,setIngredientData] = useState<IngredientChecked[]>([])
+    const swiperRef = useRef<SwiperCore | null>(null);
+    const [ingredientData, setIngredientData] = useState<IngredientChecked[]>(ingredients)
     const [searchValue,setSearchValue] = useState("")
     const [checkedIngredients, setCheckedIngredients] = useState<IngredientChecked[]>([]);
-
-    useEffect(()=> {
-      setIngredientData(ingredients)
-    },[])
 
     useEffect(()=> {
       if (swiperRef.current) {

@@ -4,22 +4,22 @@ import Image from "next/image";
 import Link from "next/link";
 import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { getCookie, setCookie } from "cookies-next";
 import { BASE_URL, DOMAIN_NAME } from "../(common)/common";
 
+const clearAuthorizationCookie = () => {
+  setCookie('Authorization', '', { 
+    domain: DOMAIN_NAME, 
+    path: '/', 
+    maxAge: -1 
+  });
+};
+
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
     const { isLogin , setIsLogin } = useLoginContext();
-
-    const deleteCookie = (name:string) => {
-      setCookie(name, '', { 
-        domain: DOMAIN_NAME, 
-        path: '/', 
-        maxAge: -1 
-      });
-    };
 
     useEffect(() => {
       const authToken = getCookie('Authorization');
@@ -27,24 +27,26 @@ export function TopNavigation() {
       if(authToken){
         setIsLogin(true);
       }
-    }, []);
+    }, [setIsLogin]);
+
+    useEffect(() => {
+      if (!isLogin) return;
+
+      const timer = setInterval(() => {
+        const authToken = getCookie('Authorization');
+        
+        if(!authToken){
+          setIsLogin(false);
+          clearAuthorizationCookie();
+        }
+      }, 600000);
+
+      return () => clearInterval(timer);
+    }, [isLogin, setIsLogin]);
 
     const handleLogout = () => {
       setIsLogin(false);
-      deleteCookie('Authorization');
-    }
-
-    const checkCookieExpiration = () => {
-      const authToken = getCookie('Authorization');
-      
-      if(!authToken){
-        setIsLogin(false);
-        deleteCookie('Authorization');
-      }
-    }
-
-    if(isLogin){
-      setInterval(checkCookieExpiration,600000);
+      clearAuthorizationCookie();
     }
 
     const handlePost = () => {
@@ -62,7 +64,7 @@ export function TopNavigation() {
       <nav className="bg-gray-100">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between">
-            {/* 메뉴1 */}
+            {/* 硫붾돱1 */}
             <div className="flex pace-x-4">
               <div>
                 <Link
@@ -83,23 +85,23 @@ export function TopNavigation() {
                   href={"/cocktails"}
                   className="py-5 px-3 text-gray-700 hover:text-gray-900"
                 >
-                  칵테일
+                  移듯뀒??
                 </Link>
                 <Link
                   href={"/ingredients"}
                   className="py-5 px-3 text-gray-700 hover:text-gray-900"
                 >
-                  재료 목록
+                  ?щ즺 紐⑸줉
                 </Link>
                 <Link
                   href={"/myingredients"}
                   className="py-5 px-3 text-gray-700 hover:text-gray-900"
                 >
-                  나의 재료
+                  ?섏쓽 ?щ즺
                 </Link> */}
               </div>
             </div>
-            {/* 메뉴2 */}
+            {/* 硫붾돱2 */}
             {!isLogin ? (
               <div className="hidden md:flex items-center space-x-1">
                 <Link href={"/login"} className="py-5 px-3">
@@ -177,24 +179,23 @@ export function TopNavigation() {
                   className="block py-2 px-4 text-sm hover:bg-gray-200"
                   onClick={()=>setMenuToggle(false)}
                 >
-                  칵테일
+                  移듯뀒??
                 </Link>
                 <Link
                   href={"/ingredients"}
                   className="block py-2 px-4 text-sm hover:bg-gray-200"
                   onClick={()=>setMenuToggle(false)}
                 >
-                  재료 목록
+                  ?щ즺 紐⑸줉
                 </Link>
                 <Link
                   href={"/myingredients"}
                   className="block py-2 px-4 text-sm hover:bg-gray-200"
                   onClick={()=>setMenuToggle(false)}
                 >
-                  나의 재료
+                  ?섏쓽 ?щ즺
                 </Link> */}
         </div>
       </nav>
     );
-  }
-
+}

@@ -13,7 +13,7 @@ interface CocktailIngredientProps{
 }
 
 function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:CocktailIngredientProps) {
-  const [ingredientData, setIngredientData] = useState<IngredientChecked[]>([]);
+  const [ingredientData, setIngredientData] = useState<IngredientChecked[]>(ingredients);
   const [searchValue, setSearchValue] = useState("");
   const [checkedIngredients, setCheckedIngredients] = useState<
     IngredientChecked[]
@@ -23,10 +23,6 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
   const handleClickNewIngredient = () => {
     setNewIngredientPage(!newIngredientPage);
   };
-
-  useEffect(() => {
-    setIngredientData(ingredients);
-  },[]);
 
   const handleCheck = (ingredient: IngredientChecked) => {
     setIngredientData((prevIngredientData) =>

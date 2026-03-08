@@ -14,7 +14,7 @@ interface MainBannerProps {
   banners : banner[]
 }
 function MainBanner({banners}:MainBannerProps) {
-    const swiperRef = useRef<SwiperCore>();
+    const swiperRef = useRef<SwiperCore | null>(null);
   return (
     <div className=" relative">
         <Swiper

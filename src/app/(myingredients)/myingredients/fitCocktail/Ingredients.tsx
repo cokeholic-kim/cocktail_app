@@ -29,11 +29,15 @@ const sendIngredientsToAPI = async (ingredientNames: string[]) => {
       body: JSON.stringify(jsondata),
     });
 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const data = await response.json();
-    return data.body;
+    return data.body ?? [];
   } catch (error) {
     console.error('Error sending ingredients to API:', error);
-    throw error;
+    return [];
   }
 };
 
@@ -58,23 +62,44 @@ function Ingredients() {
   const ingredients = useMemo(() => parseCheckedIngredients(checkedIngredients), [checkedIngredients]);
 
   const [cocktail, setCocktail] = useState<CocktailFit[]>([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (ingredients.length === 0) {
+        setCocktail([]);
+        setErrorMessage('');
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setErrorMessage('');
+
       try {
-        const fetchData = await sendIngredientsToAPI(ingredients);
-        setCocktail(moveCocktailWithOutExcludeIngredient(fetchData));
+        const response = await sendIngredientsToAPI(ingredients);
+        if (!Array.isArray(response) || response.length === 0) {
+          setErrorMessage('조건에 맞는 추천 칵테일이 없거나 백엔드 응답이 없습니다.');
+          setCocktail([]);
+          return;
+        }
+        setCocktail(moveCocktailWithOutExcludeIngredient(response));
       } catch (error) {
         console.error('Error fetching data:', error);
+        setErrorMessage('조합 추천을 불러오지 못했습니다. 백엔드가 응답되지 않습니다.');
+        setCocktail([]);
+      } finally {
+        setLoading(false);
       }
     };
-    if (ingredients.length > 0) {
-      fetchData();
-    }
+    fetchData();
   }, [ingredients]);
 
   return (
     <div className="flex justify-start flex-wrap">
+      {errorMessage && <p className="w-full m-4 text-sm rounded border border-red-300 bg-red-50 p-3 text-red-700">{errorMessage}</p>}
+      {!errorMessage && loading && <p className="w-full m-4 text-sm text-gray-500">추천 칵테일을 불러오는 중입니다...</p>}
       {cocktail.map((data, index) => {
         return <FitCocktailCard key={index} data={data} />;
       })}

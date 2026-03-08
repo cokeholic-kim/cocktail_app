@@ -2,6 +2,10 @@ import { BASE_URL } from "@/app/(common)/common";
 import Image from "next/image";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 
+type ApiEnvelope<T> = {
+  body: T;
+}
+
 interface Cocktail {
     cocktailName: string;
     proof: number;
@@ -21,7 +25,9 @@ interface Ingredient {
 }
 
 async function getDetailCocktail(name: string) {
-    return fetchWithCookie(`${BASE_URL}/cocktail/getDetail/${name}`, "Authorization");
+    return fetchWithCookie<ApiEnvelope<Cocktail | null>>(`${BASE_URL}/cocktail/getDetail/${name}`, "Authorization", {
+      fallback: { body: null },
+    });
 }
 
 
@@ -30,7 +36,14 @@ async function getDetailCocktail(name: string) {
 async function CocktailDetail({ params }: { params: Promise<{ name: string }> }) {
     const { name } = await params;
     const cocktailData = await getDetailCocktail(name);
-    const cocktail: Cocktail = cocktailData.body;
+    if (!cocktailData.ok || !cocktailData.data.body) {
+      return (
+        <div className="p-6 text-sm rounded border border-amber-300 bg-amber-50 text-amber-900">
+          선택한 칵테일 정보를 불러오지 못했습니다. 백엔드가 일시적으로 중단되어 있을 수 있습니다.
+        </div>
+      )
+    }
+    const cocktail: Cocktail = cocktailData.data.body;
     return (
         <div className="text-black">
             <div className="w-full h-96 relative -mb-8 -z-10">

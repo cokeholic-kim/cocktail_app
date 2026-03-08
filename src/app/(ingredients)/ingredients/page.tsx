@@ -2,6 +2,10 @@ import { BASE_URL } from "@/app/(common)/common";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import IngredientPageBody from "./IngredientPageBody";
 
+type ApiEnvelope<T> = {
+  body: T;
+}
+
 export interface Ingredient {
   ingredientName: string;
   enName: string;
@@ -16,12 +20,22 @@ interface UsedCocktail {
 }
 
 async function getCocktail() {
-  return fetchWithCookie(`${BASE_URL}/ingredient/getAll`, "Authorization")
+  return fetchWithCookie<ApiEnvelope<Ingredient[]>>(`${BASE_URL}/ingredient/getAll`, "Authorization", {
+    fallback: { body: [] },
+  })
 }
 
 async function IngredientsPage() {
   const ingredientsData = await getCocktail();
-  const ingredients = ingredientsData.body;
+  if (!ingredientsData.ok) {
+    return (
+      <div className="m-6 text-sm rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
+        현재 백엔드가 일시적으로 응답하지 않습니다. 재료 목록을 불러올 수 없습니다.
+      </div>
+    )
+  }
+
+  const ingredients = ingredientsData.data.body;
   return (
     <IngredientPageBody ingredients={ingredients} />
 

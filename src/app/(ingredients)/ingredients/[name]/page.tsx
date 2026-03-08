@@ -4,14 +4,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 
+type ApiEnvelope<T> = {
+  body: T;
+}
+
 async function getDetailIngredients(name: string) {
-    return fetchWithCookie(`${BASE_URL}/ingredient/getDetail/${name}`, "Authorization")
+    return fetchWithCookie<ApiEnvelope<Ingredient | null>>(`${BASE_URL}/ingredient/getDetail/${name}`, "Authorization", {
+      fallback: { body: null },
+    })
 }
 
 async function IngredientDetai({ params }: { params: Promise<{ name: string }> }) {
     const { name } = await params;
     const ingredientData = await getDetailIngredients(name);
-    const ingreident: Ingredient = ingredientData.body;
+    if (!ingredientData.ok || !ingredientData.data.body) {
+      return (
+        <div className="p-6 text-sm rounded border border-amber-300 bg-amber-50 text-amber-900">
+          선택한 재료 정보를 불러오지 못했습니다. 백엔드가 일시적으로 중단되어 있을 수 있습니다.
+        </div>
+      )
+    }
+
+    const ingreident: Ingredient = ingredientData.data.body;
     return (
         <div className="text-black">
             {/* {JSON.stringify(ingredientData)} */}

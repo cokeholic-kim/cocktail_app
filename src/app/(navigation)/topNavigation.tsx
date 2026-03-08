@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
 import { getCookie, setCookie } from "cookies-next";
-import { AUTH_COOKIE_NAME } from "../(common)/fetchUtils";
+import { AUTH_COOKIE_NAME } from "../(common)/constants";
 
 const clearAuthorizationCookie = () => {
   setCookie(AUTH_COOKIE_NAME, '', { path: "/", maxAge: -1 });

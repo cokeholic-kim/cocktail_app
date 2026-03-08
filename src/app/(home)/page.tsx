@@ -2,7 +2,8 @@ import { BASE_URL } from "../(common)/common";
 import { CocktailCardProps } from "../(common)/commonProps";
 import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
-import { fetchWithCookie, AUTH_COOKIE_NAME } from "../(common)/fetchUtils";
+import { fetchWithCookie } from "../(common)/fetchUtils";
+import { AUTH_COOKIE_NAME } from "../(common)/constants";
 
 type ApiEnvelope<T> = {
   body: T;

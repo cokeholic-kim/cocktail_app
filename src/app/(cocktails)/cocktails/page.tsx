@@ -1,7 +1,8 @@
 import { BASE_URL } from "@/app/(common)/common";
 import CocktailPageBody from "./CocktailPageBody";
 import { cookies } from "next/headers";
-import { fetchWithCookie, AUTH_COOKIE_NAME } from "@/app/(common)/fetchUtils";
+import { fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 import type { Cocktail } from "@/app/(cocktails)/typeinterface";
 import type { Ingredient } from "@/app/(ingredients)/ingredients/page";
 

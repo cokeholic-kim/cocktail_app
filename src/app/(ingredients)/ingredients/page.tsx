@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/app/(common)/common";
-import { AUTH_COOKIE_NAME, fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 import IngredientPageBody from "./IngredientPageBody";
 
 type ApiEnvelope<T> = {

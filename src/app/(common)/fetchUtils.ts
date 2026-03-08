@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
-
-export const AUTH_COOKIE_NAME = "Authorization";
+import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 
 export type FetchResult<T> = {
   ok: boolean;

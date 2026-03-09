@@ -1,9 +1,10 @@
-import { BASE_URL } from "../(common)/common";
-import { CocktailCardProps } from "../(common)/commonProps";
+import { BASE_URL } from "@/app/(common)/common";
+import { CocktailCardProps } from "@/app/(common)/commonProps";
 import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
-import { fetchWithCookie } from "../(common)/fetchUtils";
-import { AUTH_COOKIE_NAME } from "../(common)/constants";
+import { fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
+import { OfflineDataNotice } from "@/app/(common)/offlineMode";
 
 type ApiEnvelope<T> = {
   body: T;
@@ -16,6 +17,22 @@ export interface banner {
   order: number;
 }
 
+const fallbackCocktails: CocktailCardProps[] = [
+  {
+    imagePath: "/assets/icon-384x384.png",
+    cocktailName: "샘플 칵테일",
+    description: "백엔드 미연결 상태에서 UI 확인용 샘플 데이터입니다.",
+  },
+];
+
+const fallbackBanners: banner[] = [
+  {
+    imagePath: "/assets/icon-384x384.png",
+    title: "샘플 배너",
+    src: "/",
+    order: 1,
+  },
+];
 
 async function getCocktail() {
   return fetchWithCookie<ApiEnvelope<CocktailCardProps[]>>(`${BASE_URL}/cocktail/getAll`, AUTH_COOKIE_NAME, {
@@ -30,21 +47,14 @@ async function getBanner() {
 }
 
 export default async function Home() {
-  const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()])
-
-  if (!cocktails.ok || !bannersData.ok) {
-    return (
-      <div className="m-6 text-sm rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
-        현재 백엔드가 일시적으로 응답하지 않습니다. 페이지의 데이터가 일부 비어 있을 수 있습니다.
-      </div>
-    )
-  }
-
-  const cocktailsData: CocktailCardProps[] = cocktails.data.body;
-  const banners: banner[] = bannersData.data.body;
+  const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()]);
+  const isOffline = !cocktails.ok || !bannersData.ok;
+  const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data.body : fallbackCocktails;
+  const banners: banner[] = bannersData.ok ? bannersData.data.body : fallbackBanners;
 
   return (
     <>
+      {isOffline && <OfflineDataNotice pageLabel="홈" />}
       <MainBanner banners={banners} />
       <div className="flex justify-start flex-wrap">
         {cocktailsData.map((cocktail: CocktailCardProps, index: number) => {

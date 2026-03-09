@@ -5,10 +5,44 @@ import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 import type { Cocktail } from "@/app/(cocktails)/typeinterface";
 import type { Ingredient } from "@/app/(ingredients)/ingredients/page";
+import { OfflineDataNotice } from "@/app/(common)/offlineMode";
 
 type ApiEnvelope<T> = {
   body: T;
 }
+
+const fallbackCocktails: Cocktail[] = [
+  {
+    cocktailName: "샘플 올드 패션드",
+    proof: 35,
+    glass: "Old Fashioned Glass",
+    method: "Shake",
+    garnish: "오렌지 필",
+    description: "백엔드 연결 없이 표시되는 샘플 데이터",
+    imagePath: "/assets/icon-384x384.png",
+    ingredients: [
+      {
+        ingredientName: "버번 위스키",
+        volume: 45,
+        unit: "ml",
+        imagePath: "/assets/icon-384x384.png",
+      },
+    ],
+    status: "SAMPLE",
+  },
+];
+
+const fallbackGlass: string[] = ["컵 타입 샘플 1", "컵 타입 샘플 2"];
+const fallbackMethod: string[] = ["Shaken", "Built"];
+const fallbackIngredients: Ingredient[] = [
+  {
+    ingredientName: "버번 위스키",
+    enName: "Bourbon",
+    category: "베이스",
+    imagePath: "/assets/icon-384x384.png",
+    usedCocktail: null,
+  },
+];
 
 async function getAllCocktail() {
   return fetchWithCookie<ApiEnvelope<Cocktail[]>>(BASE_URL + "/cocktail/getAll", AUTH_COOKIE_NAME, {
@@ -42,15 +76,15 @@ async function CocktailsPage() {
     getMethod(),
     getAllIngredients()
   ]);
-  const hasError = !cocktailData.ok || !glassData.ok || !methodData.ok || !ingredientData.ok;
-  const cocktails = cocktailData.data.body;
-  const glass = glassData.data.body;
-  const method = methodData.data.body;
-  const ingredients = ingredientData.data.body;
+  const isOffline = !cocktailData.ok || !glassData.ok || !methodData.ok || !ingredientData.ok;
+  const cocktails = cocktailData.ok ? cocktailData.data.body : fallbackCocktails;
+  const glass = glassData.ok ? glassData.data.body : fallbackGlass;
+  const method = methodData.ok ? methodData.data.body : fallbackMethod;
+  const ingredients = ingredientData.ok ? ingredientData.data.body : fallbackIngredients;
 
   return (
     <>
-      {hasError && <div className="m-6 text-sm rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">현재 백엔드가 일시적으로 응답하지 않습니다. 일부 데이터는 기본값으로 노출됩니다.</div>}
+      {isOffline && <OfflineDataNotice pageLabel="칵테일 목록" />}
       <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients} />
     </>
   );

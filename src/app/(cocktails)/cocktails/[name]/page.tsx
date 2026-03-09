@@ -4,7 +4,7 @@ import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { OfflineDataNotice } from "@/app/(common)/offlineMode";
 
 type ApiEnvelope<T> = {
-  body: T;
+    body: T;
 }
 
 interface Cocktail {
@@ -26,39 +26,39 @@ interface Ingredient {
 }
 
 const fallbackCocktail: Cocktail = {
-  cocktailName: "샘플 위스키 사워",
-  proof: 18,
-  glass: "올드패션드 글라스",
-  method: "Shake",
-  garnish: "레몬",
-  description: "백엔드 연결이 없어도 레이아웃 확인을 위한 샘플 데이터입니다.",
-  imagePath: "/assets/icon-384x384.png",
-  ingredients: [
-    {
-      ingredientName: "럼",
-      volume: 30,
-      unit: "ml",
-      imagePath: "/assets/icon-384x384.png",
-    },
-  ],
+    cocktailName: "Sample Cocktail",
+    proof: 18,
+    glass: "Cocktail Glass",
+    method: "Shake",
+    garnish: "None",
+    description: "This is a fallback card shown when API is unavailable.",
+    imagePath: "/assets/icon-384x384.png",
+    ingredients: [
+        {
+            ingredientName: "Lemon",
+            volume: 30,
+            unit: "ml",
+            imagePath: "/assets/icon-384x384.png",
+        },
+    ],
 };
 
 async function getDetailCocktail(name: string) {
     const encodedName = encodeURIComponent(name);
     return fetchWithCookie<ApiEnvelope<Cocktail | null>>(`${BASE_URL}/cocktail/getDetail/${encodedName}`, "Authorization", {
-      fallback: { body: null },
+        fallback: { body: null },
     });
 }
 
 async function CocktailDetail({ params }: { params: Promise<{ name: string }> }) {
     const { name } = await params;
     const cocktailData = await getDetailCocktail(name);
-    const isOffline = !cocktailData.ok || !cocktailData.data.body;
-    const cocktail = cocktailData.ok && cocktailData.data.body ? cocktailData.data.body : fallbackCocktail;
+    const isOffline = !cocktailData.ok || !cocktailData.data?.body;
+    const cocktail = cocktailData.ok && cocktailData.data?.body ? cocktailData.data.body : fallbackCocktail;
 
     return (
         <div className="text-black">
-            {isOffline && <OfflineDataNotice pageLabel={`칵테일 상세 (${name})`} />}
+            {isOffline && <OfflineDataNotice pageLabel={`Cocktail Detail (${name})`} />}
             <div className="w-full h-96 relative -mb-8 -z-10">
                 <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                     <Image
@@ -72,16 +72,16 @@ async function CocktailDetail({ params }: { params: Promise<{ name: string }> })
             </div>
             <div className="rounded-t-3xl border-black bg-slate-50 overflow-hidden p-5 mb-5">
                 <h1 className="text-4xl mb-3">{cocktail.cocktailName}</h1>
-                <p className="text-blue-600/50">도수 : {cocktail.proof}</p>
+                <p className="text-blue-600/50">Proof: {cocktail.proof}</p>
                 <div className="md:min-h-40 min-h-28">
                     <p>{cocktail.description}</p>
                 </div>
-                <p className="mb-3">잔종류 : {cocktail.glass}</p>
-                <p className="mb-3">제조법 : {cocktail.method}</p>
-                <p className="mb-3">장식 : {cocktail.garnish}</p>
+                <p className="mb-3">Glass: {cocktail.glass}</p>
+                <p className="mb-3">Method: {cocktail.method}</p>
+                <p className="mb-3">Garnish: {cocktail.garnish}</p>
             </div>
             <div className="border-black bg-slate-50 overflow-hidden p-5">
-                <h1 className="text-4xl mb-3">재료</h1>
+                <h1 className="text-4xl mb-3">Ingredients</h1>
                 <ul>
                     {cocktail.ingredients.map((ingredient) => (
                         <li className="flex mb-3 h-20 items-center justify-between" key={ingredient.ingredientName}>
@@ -104,4 +104,5 @@ async function CocktailDetail({ params }: { params: Promise<{ name: string }> })
     )
 }
 
-export default CocktailDetail
+export default CocktailDetail;
+

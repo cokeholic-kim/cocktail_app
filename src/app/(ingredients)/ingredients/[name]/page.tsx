@@ -6,42 +6,42 @@ import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { OfflineDataNotice } from "@/app/(common)/offlineMode";
 
 type ApiEnvelope<T> = {
-  body: T;
+    body: T;
 }
 
 async function getDetailIngredients(name: string) {
-    return fetchWithCookie<ApiEnvelope<Ingredient | null>>(`${BASE_URL}/ingredient/getDetail/${name}`, "Authorization", {
-      fallback: { body: null },
-    })
+    return fetchWithCookie<ApiEnvelope<Ingredient | null>>(`${BASE_URL}/ingredient/getDetail/${encodeURIComponent(name)}`, "Authorization", {
+        fallback: { body: null },
+    });
 }
 
 const fallbackIngredient: Ingredient = {
-  ingredientName: "샘플 재료",
-  enName: "Sample Ingredient",
-  category: "샘플 카테고리",
-  imagePath: "/assets/icon-384x384.png",
-  usedCocktail: [
-    {
-      cocktailName: "샘플 칵테일",
-      imagePath: "/assets/icon-384x384.png",
-    },
-  ],
+    ingredientName: "Sample Ingredient",
+    enName: "Sample Ingredient",
+    category: "Spirit",
+    imagePath: "/assets/icon-384x384.png",
+    usedCocktail: [
+        {
+            cocktailName: "Sample Cocktail",
+            imagePath: "/assets/icon-384x384.png",
+        },
+    ],
 };
 
-async function IngredientDetai({ params }: { params: Promise<{ name: string }> }) {
+async function IngredientDetail({ params }: { params: Promise<{ name: string }> }) {
     const { name } = await params;
     const ingredientData = await getDetailIngredients(name);
-    const isOffline = !ingredientData.ok || !ingredientData.data.body;
-    const ingreident = ingredientData.ok && ingredientData.data.body ? ingredientData.data.body : fallbackIngredient;
+    const isOffline = !ingredientData.ok || !ingredientData.data?.body;
+    const ingredient = ingredientData.ok && ingredientData.data?.body ? ingredientData.data.body : fallbackIngredient;
 
     return (
         <div className="text-black">
-            {isOffline && <OfflineDataNotice pageLabel={`재료 상세 (${name})`} />}
+            {isOffline && <OfflineDataNotice pageLabel={`Ingredient Detail (${name})`} />}
             <div className="w-full h-96 relative -mb-8 -z-10">
                 <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                     <Image
-                        src={ingreident.imagePath}
-                        alt={ingreident.ingredientName}
+                        src={ingredient.imagePath}
+                        alt={ingredient.ingredientName}
                         width={400}
                         height={300}
                         className="rounded-t-lg w-full h-full object-contain"
@@ -49,16 +49,16 @@ async function IngredientDetai({ params }: { params: Promise<{ name: string }> }
                 </div>
             </div>
             <div className="rounded-t-3xl border-black bg-slate-50 overflow-hidden p-5 mb-5">
-                <h1 className="text-4xl mb-3">{ingreident.ingredientName}</h1>
-                <p className="text-blue-600/50">{ingreident.category}</p>
+                <h1 className="text-4xl mb-3">{ingredient.ingredientName}</h1>
+                <p className="text-blue-600/50">{ingredient.category}</p>
                 <div className="md:min-h-40 min-h-28">
-                    <p>{ingreident.enName}</p>
+                    <p>{ingredient.enName}</p>
                 </div>
             </div>
             <div className="border-black bg-slate-50 overflow-hidden p-5">
-                <h1 className="text-4xl mb-3">관련 칵테일</h1>
+                <h1 className="text-4xl mb-3">Used Cocktail</h1>
                 <ul>
-                    {ingreident.usedCocktail?.map((cocktail) => (
+                    {ingredient.usedCocktail?.map((cocktail) => (
                         <li className="flex mb-3 h-20 items-center" key={cocktail.cocktailName}>
                             <div className="inset-0 w-20 h-full border-4 border-indigo-400 rounded-full overflow-hidden">
                                 <Image
@@ -77,7 +77,8 @@ async function IngredientDetai({ params }: { params: Promise<{ name: string }> }
                 </ul>
             </div>
         </div>
-    )
+    );
 }
 
-export default IngredientDetai
+export default IngredientDetail;
+

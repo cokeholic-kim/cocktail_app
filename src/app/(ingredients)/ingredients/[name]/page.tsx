@@ -3,6 +3,7 @@ import { Ingredient } from "../page";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
+import { OfflineDataNotice } from "@/app/(common)/offlineMode";
 
 type ApiEnvelope<T> = {
   body: T;
@@ -14,20 +15,28 @@ async function getDetailIngredients(name: string) {
     })
 }
 
+const fallbackIngredient: Ingredient = {
+  ingredientName: "샘플 재료",
+  enName: "Sample Ingredient",
+  category: "샘플 카테고리",
+  imagePath: "/assets/icon-384x384.png",
+  usedCocktail: [
+    {
+      cocktailName: "샘플 칵테일",
+      imagePath: "/assets/icon-384x384.png",
+    },
+  ],
+};
+
 async function IngredientDetai({ params }: { params: Promise<{ name: string }> }) {
     const { name } = await params;
     const ingredientData = await getDetailIngredients(name);
-    if (!ingredientData.ok || !ingredientData.data.body) {
-      return (
-        <div className="p-6 text-sm rounded border border-amber-300 bg-amber-50 text-amber-900">
-          선택한 재료 정보를 불러오지 못했습니다. 백엔드가 일시적으로 중단되어 있을 수 있습니다.
-        </div>
-      )
-    }
+    const isOffline = !ingredientData.ok || !ingredientData.data.body;
+    const ingreident = ingredientData.ok && ingredientData.data.body ? ingredientData.data.body : fallbackIngredient;
 
-    const ingreident: Ingredient = ingredientData.data.body;
     return (
         <div className="text-black">
+            {isOffline && <OfflineDataNotice pageLabel={`재료 상세 (${name})`} />}
             <div className="w-full h-96 relative -mb-8 -z-10">
                 <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                     <Image
@@ -47,7 +56,7 @@ async function IngredientDetai({ params }: { params: Promise<{ name: string }> }
                 </div>
             </div>
             <div className="border-black bg-slate-50 overflow-hidden p-5">
-                <h1 className="text-4xl mb-3">사용되는 칵테일</h1>
+                <h1 className="text-4xl mb-3">관련 칵테일</h1>
                 <ul>
                     {ingreident.usedCocktail?.map((cocktail) => (
                         <li className="flex mb-3 h-20 items-center" key={cocktail.cocktailName}>

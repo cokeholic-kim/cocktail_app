@@ -1,9 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Ingredient } from './page';
 
+export interface IngredientCardData {
+  ingredientName: string;
+  enName: string;
+  category: string;
+  imagePath: string;
+}
 
-function IngredientCard({ingredient,size}: {ingredient: Ingredient,size:string}) {
+function IngredientCard({ ingredient, size }: { ingredient: IngredientCardData; size: string }) {
   return (
     <div className={`p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ${size.length > 0 ? size : ''}`}>
       <div className="w-full h-44 mb-4 relative">

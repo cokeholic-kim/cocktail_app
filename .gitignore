@@ -37,6 +37,10 @@ next-env.d.ts
 TODO.md
 prompt/
 AGENTS.md
+/.github/
+docs/project-management.md
+scripts/github-issue-project-sync.ps1
+scripts/sync-issues-to-project.ps1
 
 # pwa build artifacts
 public/sw.js

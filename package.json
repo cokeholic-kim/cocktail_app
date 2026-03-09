@@ -9,6 +9,7 @@
     "build:turbopack": "next build --turbopack",
     "check:ci": "npm run lint && npm run build",
     "check:deploy-gate": "powershell -ExecutionPolicy Bypass -File .\\scripts\\p0-deploy-gate.ps1",
+    "check:p0-smoke": "powershell -ExecutionPolicy Bypass -File .\\scripts\\p0-smoke-tests.ps1",
     "start": "next start",
     "lint": "eslint ."
   },

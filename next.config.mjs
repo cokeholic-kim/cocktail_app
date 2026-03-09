@@ -1,6 +1,7 @@
 import withPWA from 'next-pwa';
 
 const nextConfig = {
+  turbopack: {},
   images: {
     remotePatterns: [
       {

@@ -1,6 +1,5 @@
 import { BASE_URL } from "@/app/(common)/common";
 import CocktailPageBody from "./CocktailPageBody";
-import { cookies } from "next/headers";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 import type { Cocktail } from "@/app/(cocktails)/typeinterface";
@@ -8,86 +7,99 @@ import type { Ingredient } from "@/app/(ingredients)/ingredients/page";
 import { OfflineDataNotice } from "@/app/(common)/offlineMode";
 
 type ApiEnvelope<T> = {
-  body: T;
+    body: T;
 }
 
 const fallbackCocktails: Cocktail[] = [
-  {
-    cocktailName: "샘플 올드 패션드",
-    proof: 35,
-    glass: "Old Fashioned Glass",
-    method: "Shake",
-    garnish: "오렌지 필",
-    description: "백엔드 연결 없이 표시되는 샘플 데이터",
-    imagePath: "/assets/icon-384x384.png",
-    ingredients: [
-      {
-        ingredientName: "버번 위스키",
-        volume: 45,
-        unit: "ml",
+    {
+        cocktailName: "Sample Cocktail",
+        proof: 35,
+        glass: "Old Fashioned Glass",
+        method: "Shake",
+        garnish: "None",
+        description: "Sample data is shown because the API is unavailable.",
         imagePath: "/assets/icon-384x384.png",
-      },
-    ],
-    status: "SAMPLE",
-  },
+        ingredients: [
+            {
+                ingredientName: "Bourbon",
+                volume: 45,
+                unit: "ml",
+                imagePath: "/assets/icon-384x384.png",
+            },
+        ],
+        status: "SAMPLE",
+    },
 ];
 
-const fallbackGlass: string[] = ["컵 타입 샘플 1", "컵 타입 샘플 2"];
-const fallbackMethod: string[] = ["Shaken", "Built"];
+const fallbackGlass: string[] = ["Old Fashioned", "Highball"];
+const fallbackMethod: string[] = ["Shake", "Build"];
 const fallbackIngredients: Ingredient[] = [
-  {
-    ingredientName: "버번 위스키",
-    enName: "Bourbon",
-    category: "베이스",
-    imagePath: "/assets/icon-384x384.png",
-    usedCocktail: null,
-  },
+    {
+        ingredientName: "Bourbon",
+        enName: "Bourbon",
+        category: "Spirit",
+        imagePath: "/assets/icon-384x384.png",
+        usedCocktail: null,
+    },
 ];
 
 async function getAllCocktail() {
-  return fetchWithCookie<ApiEnvelope<Cocktail[]>>(BASE_URL + "/cocktail/getAll", AUTH_COOKIE_NAME, {
-    fallback: { body: [] },
-  });
+    return fetchWithCookie<ApiEnvelope<Cocktail[]>>(`${BASE_URL}/cocktail/getAll`, AUTH_COOKIE_NAME, {
+        fallback: { body: [] },
+    });
 }
 
 async function getGlass() {
-  return fetchWithCookie<ApiEnvelope<string[]>>(BASE_URL + "/cocktail/glass", AUTH_COOKIE_NAME, {
-    fallback: { body: [] },
-  });
+    return fetchWithCookie<ApiEnvelope<string[]>>(`${BASE_URL}/cocktail/glass`, AUTH_COOKIE_NAME, {
+        fallback: { body: [] },
+    });
 }
 
 async function getMethod() {
-  return fetchWithCookie<ApiEnvelope<string[]>>(BASE_URL + "/cocktail/method", AUTH_COOKIE_NAME, {
-    fallback: { body: [] },
-  });
+    return fetchWithCookie<ApiEnvelope<string[]>>(`${BASE_URL}/cocktail/method`, AUTH_COOKIE_NAME, {
+        fallback: { body: [] },
+    });
 }
 
 async function getAllIngredients() {
-  return fetchWithCookie<ApiEnvelope<Ingredient[]>>(BASE_URL + "/ingredient/getAll", AUTH_COOKIE_NAME, {
-    fallback: { body: [] },
-  });
+    return fetchWithCookie<ApiEnvelope<Ingredient[]>>(`${BASE_URL}/ingredient/getAll`, AUTH_COOKIE_NAME, {
+        fallback: { body: [] },
+    });
 }
 
 async function CocktailsPage() {
-  const authToken = (await cookies()).get(AUTH_COOKIE_NAME)
-  const [cocktailData, glassData, methodData, ingredientData] = await Promise.all([
-    getAllCocktail(),
-    getGlass(),
-    getMethod(),
-    getAllIngredients()
-  ]);
-  const isOffline = !cocktailData.ok || !glassData.ok || !methodData.ok || !ingredientData.ok;
-  const cocktails = cocktailData.ok ? cocktailData.data.body : fallbackCocktails;
-  const glass = glassData.ok ? glassData.data.body : fallbackGlass;
-  const method = methodData.ok ? methodData.data.body : fallbackMethod;
-  const ingredients = ingredientData.ok ? ingredientData.data.body : fallbackIngredients;
+    const [cocktailData, glassData, methodData, ingredientData] = await Promise.all([
+        getAllCocktail(),
+        getGlass(),
+        getMethod(),
+        getAllIngredients()
+    ]);
+    const isOffline = !cocktailData.ok || !glassData.ok || !methodData.ok || !ingredientData.ok;
+    const cocktails = cocktailData.ok ? cocktailData.data?.body ?? [] : [];
+    const glass = glassData.ok ? glassData.data?.body ?? [] : [];
+    const method = methodData.ok ? methodData.data?.body ?? [] : [];
+    const ingredients = ingredientData.ok ? ingredientData.data?.body ?? [] : [];
+    const firstErrorMessage = !cocktailData.ok
+        ? cocktailData.error
+        : !glassData.ok
+            ? glassData.error
+            : !methodData.ok
+                ? methodData.error
+                : !ingredientData.ok
+                    ? ingredientData.error
+                    : undefined;
 
-  return (
-    <>
-      {isOffline && <OfflineDataNotice pageLabel="칵테일 목록" />}
-      <CocktailPageBody cocktails={cocktails} glass={glass} method={method} ingredients={ingredients} />
-    </>
-  );
+    return (
+        <>
+            {isOffline && <OfflineDataNotice pageLabel="Cocktail List" errorMessage={firstErrorMessage} />}
+            <CocktailPageBody
+                cocktails={cocktails.length > 0 ? cocktails : fallbackCocktails}
+                glass={glass.length > 0 ? glass : fallbackGlass}
+                method={method.length > 0 ? method : fallbackMethod}
+                ingredients={ingredients.length > 0 ? ingredients : fallbackIngredients}
+            />
+        </>
+    );
 }
 
 export default CocktailsPage;

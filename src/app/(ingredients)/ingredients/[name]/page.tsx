@@ -33,10 +33,11 @@ async function IngredientDetail({ params }: { params: Promise<{ name: string }> 
     const ingredientData = await getDetailIngredients(name);
     const isOffline = !ingredientData.ok || !ingredientData.data?.body;
     const ingredient = ingredientData.ok && ingredientData.data?.body ? ingredientData.data.body : fallbackIngredient;
+    const errorMessage = !ingredientData.ok ? ingredientData.error : undefined;
 
     return (
         <div className="text-black">
-            {isOffline && <OfflineDataNotice pageLabel={`Ingredient Detail (${name})`} />}
+            {isOffline && <OfflineDataNotice pageLabel={`Ingredient Detail (${name})`} errorMessage={errorMessage} />}
             <div className="w-full h-96 relative -mb-8 -z-10">
                 <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                     <Image
@@ -81,4 +82,3 @@ async function IngredientDetail({ params }: { params: Promise<{ name: string }> 
 }
 
 export default IngredientDetail;
-

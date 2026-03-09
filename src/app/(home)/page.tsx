@@ -51,10 +51,11 @@ export default async function Home() {
     const isOffline = !cocktails.ok || !bannersData.ok;
     const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data?.body ?? [] : [];
     const banners = bannersData.ok ? bannersData.data?.body ?? [] : [];
+    const errorMessage = !cocktails.ok ? cocktails.error : !bannersData.ok ? bannersData.error : undefined;
 
     return (
         <>
-            {isOffline && <OfflineDataNotice pageLabel="Home" />}
+            {isOffline && <OfflineDataNotice pageLabel="Home" errorMessage={errorMessage} />}
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <div className="flex justify-start flex-wrap">
                 {cocktailsData.length > 0
@@ -81,4 +82,3 @@ export default async function Home() {
         </>
     );
 }
-

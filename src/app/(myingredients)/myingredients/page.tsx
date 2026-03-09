@@ -28,14 +28,14 @@ async function MyIngredient() {
     const ingredientData = await getIngredient();
     const isOffline = !ingredientData.ok;
     const ingredients = ingredientData.ok ? ingredientData.data?.body ?? [] : [];
+    const errorMessage = !ingredientData.ok ? ingredientData.error : undefined;
 
     return (
         <div>
-            {isOffline && <OfflineDataNotice pageLabel="My Ingredients" />}
+            {isOffline && <OfflineDataNotice pageLabel="My Ingredients" errorMessage={errorMessage} />}
             <MyIngredientBody ingredients={ingredients.length > 0 ? ingredients : fallbackIngredients} />
         </div>
     );
 }
 
 export default MyIngredient;
-

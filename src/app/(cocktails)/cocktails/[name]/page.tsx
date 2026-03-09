@@ -55,10 +55,11 @@ async function CocktailDetail({ params }: { params: Promise<{ name: string }> })
     const cocktailData = await getDetailCocktail(name);
     const isOffline = !cocktailData.ok || !cocktailData.data?.body;
     const cocktail = cocktailData.ok && cocktailData.data?.body ? cocktailData.data.body : fallbackCocktail;
+    const errorMessage = !cocktailData.ok ? cocktailData.error : undefined;
 
     return (
         <div className="text-black">
-            {isOffline && <OfflineDataNotice pageLabel={`Cocktail Detail (${name})`} />}
+            {isOffline && <OfflineDataNotice pageLabel={`Cocktail Detail (${name})`} errorMessage={errorMessage} />}
             <div className="w-full h-96 relative -mb-8 -z-10">
                 <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
                     <Image
@@ -105,4 +106,3 @@ async function CocktailDetail({ params }: { params: Promise<{ name: string }> })
 }
 
 export default CocktailDetail;
-

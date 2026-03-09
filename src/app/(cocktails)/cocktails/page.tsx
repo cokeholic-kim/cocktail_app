@@ -79,10 +79,19 @@ async function CocktailsPage() {
     const glass = glassData.ok ? glassData.data?.body ?? [] : [];
     const method = methodData.ok ? methodData.data?.body ?? [] : [];
     const ingredients = ingredientData.ok ? ingredientData.data?.body ?? [] : [];
+    const firstErrorMessage = !cocktailData.ok
+        ? cocktailData.error
+        : !glassData.ok
+            ? glassData.error
+            : !methodData.ok
+                ? methodData.error
+                : !ingredientData.ok
+                    ? ingredientData.error
+                    : undefined;
 
     return (
         <>
-            {isOffline && <OfflineDataNotice pageLabel="Cocktail List" />}
+            {isOffline && <OfflineDataNotice pageLabel="Cocktail List" errorMessage={firstErrorMessage} />}
             <CocktailPageBody
                 cocktails={cocktails.length > 0 ? cocktails : fallbackCocktails}
                 glass={glass.length > 0 ? glass : fallbackGlass}

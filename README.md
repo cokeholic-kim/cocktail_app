@@ -74,3 +74,22 @@
 재료의 정보와 이미지를 등록후 제출 버튼을 클릭하면 재료가 등록됩니다.
 </pre>
 
+
+## 업그레이드 운영 가이드
+
+### 버전 정책
+- 런타임: `next` >= 16.x, `react`/`react-dom` >= 19.x (현재: 16.1.6 / 19.2.4)
+- PWA/빌드: `next-pwa` 5.6.0, `swiper` 12.1.2
+- 스타일/검증: `tailwindcss` 3.4.19, `eslint` 9.39.4
+- 신규 변경 시 `check:deps-compat` 통과를 배포 이전 필수 점검으로 사용
+
+### 배포/검증 순서
+1. `npm run check:deps-compat`
+2. `npm run lint`
+3. `npm run build`
+4. `npm run check:p0-smoke`
+5. PR 템플릿 체크리스트 완비 후 main 브랜치 승인/병합
+
+### 브랜치/PR 규칙
+- 브랜치: `<type>/<이슈번호>-요약`
+- 배포 권한 브랜치: `main`만 배포 트리거 대상

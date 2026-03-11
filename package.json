@@ -10,6 +10,7 @@
     "check:ci": "npm run lint && npm run build",
     "check:deploy-gate": "powershell -ExecutionPolicy Bypass -File .\\scripts\\p0-deploy-gate.ps1",
     "check:p0-smoke": "powershell -ExecutionPolicy Bypass -File .\\scripts\\p0-smoke-tests.ps1",
+    "check:upgrade-regression": "npm run lint && npm run build && npm run check:p0-smoke",
     "start": "next start",
     "lint": "eslint ."
   },

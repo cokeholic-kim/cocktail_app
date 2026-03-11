@@ -18,30 +18,23 @@ export const viewport = {
 export const metadata: Metadata = {
   title: {
     template: "%s | Sool lae",
-    default: "Sool lae",
+    default: "Sool lae"
   },
-  description: "술재료와 레시피로 만드는 칵테일 레시피 앱입니다.",
+  description: "숨은 나의 주류취향 , 칵테일 주류 검색 부터 추천까지 술래에서 찾아보세요.",
   manifest: "/manifest.json",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
+
   return (
     <html lang="en">
-      <head>
-        <meta
-          httpEquiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        />
-      </head>
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
       <body className={inter.className}>
         <LoginContextProvider>
           <header>
             <TopNavigation />
           </header>
-          <main className="max-w-6xl my-0 mx-auto min-h-screen pb-20">
-            {children}
+          <main className="max-w-6xl my-0 mx-auto min-h-screen pb-20">{children}
           </main>
           <footer>
             <FooterNavigation />

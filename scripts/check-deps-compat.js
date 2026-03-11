@@ -1,7 +1,17 @@
 const fs = require('fs');
 
-const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-const lockJson = JSON.parse(fs.readFileSync('./package-lock.json', 'utf8'));
+function readJsonSafe(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (error) {
+    console.error(`Failed to read ${filePath}: ${error.message}`);
+    console.error('Run `npm install` first before running this check.');
+    process.exit(1);
+  }
+}
+
+const packageJson = readJsonSafe('./package.json');
+const lockJson = readJsonSafe('./package-lock.json');
 const allDeps = {
   ...packageJson.dependencies,
   ...packageJson.devDependencies,
@@ -24,7 +34,15 @@ function getInstalledVersion(name) {
   }
   const lockVersion =
     lockJson.packages?.[`node_modules/${name}`]?.version;
-  return { range: directVersion, installed: lockVersion || directVersion };
+  const normalizeVersion = (value) => {
+    const parsed = String(value).match(/(\d+\.\d+\.\d+)/);
+    return parsed ? parsed[0] : null;
+  };
+  const installed = normalizeVersion(lockVersion || directVersion);
+  if (!lockVersion) {
+    console.warn(`Warning: No lock entry for ${name}, resolved installed version from package.json range as ${installed || 'null'}.`);
+  }
+  return { range: directVersion, installed };
 }
 
 function parseMajorMinorPatch(v) {
@@ -51,6 +69,10 @@ const report = Object.entries(targets).map(([name, target]) => {
   if (!info) {
     hasFailure = true;
     return `[MISSING] ${name} not found in package.json`;
+  }
+  if (!info.installed) {
+    hasFailure = true;
+    return `[MISSING] ${name}: cannot resolve exact version from package.json range (${info.range})`;
   }
 
   if (!sameMajor(info.installed, target)) {

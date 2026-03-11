@@ -23,8 +23,8 @@
 - API 실패 상태에서 에러 UI가 깨지지 않고 표시되는지 확인한다.
 
 ## 실행 명령
-- `powershell -ExecutionPolicy Bypass -File .\scripts\p0-deploy-gate.ps1 -BaseUrl https://cocktail-app-sand.vercel.app`
-- `powershell -ExecutionPolicy Bypass -File .\scripts\p0-smoke-tests.ps1 -BaseUrl https://cocktail-app-sand.vercel.app -CocktailName "Margarita" -IngredientName "vodka"`
+- `npm run check:deploy-gate`
+- `npm run check:p0-smoke`
 - `npm run check:deps-compat`
 
 ## PR 체크리스트

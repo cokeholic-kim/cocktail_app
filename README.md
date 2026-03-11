@@ -93,3 +93,11 @@
 ### 브랜치/PR 규칙
 - 브랜치: `<type>/<이슈번호>-요약`
 - 배포 권한 브랜치: `main`만 배포 트리거 대상
+
+## 운영 문서 링크
+- [Deploy Gate Checklist (P0)](docs/deploy-gate-checklist.md)
+- [업그레이드 의존성/환경값 정합성 정책](docs/upgrade-dependency-env-policy.md)
+- [업그레이드 브랜치/릴리즈/롤백 정책](docs/upgrade-release-policy.md)
+
+## 참고 문서
+- [Repository Guidelines](AGENTS.md)

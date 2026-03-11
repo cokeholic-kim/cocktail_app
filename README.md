@@ -99,5 +99,3 @@
 - [업그레이드 의존성/환경값 정합성 정책](docs/upgrade-dependency-env-policy.md)
 - [업그레이드 브랜치/릴리즈/롤백 정책](docs/upgrade-release-policy.md)
 
-## 참고 문서
-- [Repository Guidelines](AGENTS.md)

@@ -2,7 +2,7 @@ import { BASE_URL } from "@/app/(common)/common";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 import IngredientPageBody from "./IngredientPageBody";
-import { OfflineDataNotice } from "@/app/(common)/offlineMode";
+import { DataStateNotice, DataViewState } from "@/app/(common)/components/dataStateNotice";
 
 type ApiEnvelope<T> = {
     body: T;
@@ -42,10 +42,19 @@ async function IngredientsPage() {
     const isOffline = !ingredientsData.ok;
     const ingredients = ingredientsData.ok ? ingredientsData.data?.body ?? [] : [];
     const errorMessage = !ingredientsData.ok ? ingredientsData.error : undefined;
+    const ingredientListState: DataViewState = isOffline
+        ? "error"
+        : ingredients.length > 0
+            ? "ready"
+            : "empty";
 
     return (
         <div>
-            {isOffline && <OfflineDataNotice pageLabel="Ingredient List" errorMessage={errorMessage} />}
+            <DataStateNotice
+                state={ingredientListState}
+                pageLabel="Ingredient List"
+                message={errorMessage}
+            />
             <IngredientPageBody ingredients={ingredients.length > 0 ? ingredients : fallbackIngredients} />
         </div>
     );

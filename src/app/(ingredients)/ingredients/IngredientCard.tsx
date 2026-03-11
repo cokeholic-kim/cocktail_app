@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { uiTokenStyles } from '@/app/(common)/components/uiTokens';
 
 export interface IngredientCardData {
   ingredientName: string;
@@ -10,9 +11,9 @@ export interface IngredientCardData {
 
 function IngredientCard({ ingredient, size }: { ingredient: IngredientCardData; size: string }) {
   return (
-    <div className={`p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 ${size.length > 0 ? size : ''}`}>
+    <div className={`p-6 ${uiTokenStyles.card.base} ${size.length > 0 ? size : ''}`}>
       <div className="w-full h-44 mb-4 relative">
-      <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
+      <div className={uiTokenStyles.card.imageFrame}>
       <Image
           src={ingredient.imagePath}
           alt={ingredient.ingredientName}
@@ -23,24 +24,24 @@ function IngredientCard({ ingredient, size }: { ingredient: IngredientCardData; 
       </div>
       </div>
       <div className="mb-4">
-        <p className="font-normal text-gray-700 dark:text-gray-400 text-lg">
+        <p className={uiTokenStyles.card.title}>
           {ingredient.ingredientName}
         </p>
       </div>
       <div className="mb-6">
-        <p className="font-normal text-gray-700 dark:text-gray-400">
+        <p className={uiTokenStyles.card.description}>
           {ingredient.enName}
         </p>
       </div>
       <div className="mb-6">
-        <p className="font-normal text-gray-700 dark:text-gray-400">
+        <p className={uiTokenStyles.card.description}>
           {ingredient.category}
         </p>
       </div>
       <div>
         <Link
           href={`/ingredients/${ingredient.ingredientName}`}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className={uiTokenStyles.button.primary}
         >
           Read more
           <svg

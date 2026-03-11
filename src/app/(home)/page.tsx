@@ -4,7 +4,7 @@ import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
-import { OfflineDataNotice } from "@/app/(common)/offlineMode";
+import { DataStateNotice, DataViewState } from "@/app/(common)/components/dataStateNotice";
 
 type ApiEnvelope<T> = {
     body: T;
@@ -48,14 +48,19 @@ async function getBanner() {
 
 export default async function Home() {
     const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()]);
-    const isOffline = !cocktails.ok || !bannersData.ok;
     const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data?.body ?? [] : [];
     const banners = bannersData.ok ? bannersData.data?.body ?? [] : [];
     const errorMessage = !cocktails.ok ? cocktails.error : !bannersData.ok ? bannersData.error : undefined;
+    const cocktailsState: DataViewState =
+        !cocktails.ok || !bannersData.ok
+            ? "error"
+            : cocktailsData.length > 0 || banners.length > 0
+                ? "ready"
+                : "empty";
 
     return (
         <>
-            {isOffline && <OfflineDataNotice pageLabel="Home" errorMessage={errorMessage} />}
+            <DataStateNotice state={cocktailsState} pageLabel="Home" message={errorMessage} />
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <div className="flex justify-start flex-wrap">
                 {cocktailsData.length > 0

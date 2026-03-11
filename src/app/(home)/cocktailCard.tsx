@@ -3,15 +3,16 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { CocktailCardProps } from '../(common)/commonProps';
+import { uiTokenStyles } from '@/app/(common)/components/uiTokens';
 
 function CocktailCard({imagePath,cocktailName,description}:CocktailCardProps) {
   
 
 
   return (
-    <div className="md:w-1/4 w-1/2 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className={`md:w-1/4 w-1/2 p-6 ${uiTokenStyles.card.base}`}>
       <div className="w-full h-44 mb-4 relative">
-      <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
+      <div className={uiTokenStyles.card.imageFrame}>
       <Image
           src={imagePath}
           alt={cocktailName}
@@ -22,20 +23,20 @@ function CocktailCard({imagePath,cocktailName,description}:CocktailCardProps) {
       </div>
       </div>
       <div className="mb-4">
-        <p className="font-normal text-gray-700 dark:text-gray-400 text-lg">
+        <p className={uiTokenStyles.card.title}>
           {cocktailName}
         </p>
       </div>
       <div className="mb-6">
-        <p className="font-normal text-gray-700 dark:text-gray-400">
+        <p className={uiTokenStyles.card.description}>
           {description}
         </p>
       </div>
       <div>
         <Link
           href={`/cocktails/${cocktailName}`}
-          className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
+          className={uiTokenStyles.button.primary}
+          >
           Read more
           <svg
             className="rtl:rotate-180 w-3.5 h-3.5 ms-2"

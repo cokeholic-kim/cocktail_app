@@ -26,7 +26,7 @@
 - 현재 운영 기준은 webpack 기반으로 유지한다.
   - `npm run dev` (`next dev --webpack`)
   - `npm run build` (`next build --webpack`)
-- `next.config.ts`에 webpack 커스텀 설정이 존재할 경우:
+- `next.config.mjs`(또는 동일 경로의 `next.config.ts`)에 webpack 커스텀 설정이 존재할 경우:
   - Turbopack 경고가 뜨면 기본 운영은 `--webpack`으로 고정한다.
   - Turbopack 정식 마이그레이션이 완료되면 `turbopack` 설정을 명시적으로 분기 처리한다.
 - `npm run dev:turbopack`, `npm run build:turbopack`은 비교 점검 용도로 사용한다.

@@ -1,5 +1,7 @@
 import withPWA from 'next-pwa';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const nextConfig = {
   turbopack: {},
   images: {
@@ -18,5 +20,8 @@ const nextConfig = {
 };
 
 export default withPWA({
+  disable: isDev,
   dest: 'public',
+  register: true,
+  skipWaiting: true,
 })(nextConfig);

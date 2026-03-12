@@ -8,9 +8,9 @@ import NewIngredientCard from "@/app/(ingredients)/ingredients/NewIngredientCard
 import { uiTokenStyles } from "@/app/(common)/components/uiTokens";
 import { dataStateLabels, demoCocktails, demoIngredients, DesignLabState, sampleErrorMessage } from "@/app/design-lab/fixtures";
 
-function filterBySearch<T extends { [key: string]: unknown }>(items: T[], keyword: string, field: keyof T) {
+function filterBySearch<T, K extends keyof T>(items: T[], keyword: string, field: K) {
     if (!keyword) return items;
-    return items.filter((item) => `${item[field]}`.toLowerCase().includes(keyword.toLowerCase()));
+    return items.filter((item) => String(item[field] ?? "").toLowerCase().includes(keyword.toLowerCase()));
 }
 
 function getVisibleItems<T>(state: DesignLabState, items: T[]) {

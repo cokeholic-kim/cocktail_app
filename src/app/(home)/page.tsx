@@ -10,6 +10,8 @@ type ApiEnvelope<T> = {
     body: T;
 };
 
+type HomePageState = Exclude<DataViewState, "loading">;
+
 export interface banner {
     imagePath: string;
     title: string;
@@ -46,8 +48,8 @@ async function getBanner() {
     });
 }
 
-function getErrorMessage(...errors: Array<string | undefined>) {
-    const visibleErrors = errors.filter(Boolean);
+function getErrorMessage(...errors: Array<string | null | undefined>) {
+    const visibleErrors = errors.filter((error): error is string => Boolean(error));
     return visibleErrors.length > 0 ? visibleErrors.join(" | ") : undefined;
 }
 
@@ -59,7 +61,7 @@ export default async function Home() {
         cocktails.ok ? undefined : cocktails.error,
         bannersData.ok ? undefined : bannersData.error
     );
-    const cocktailsState: DataViewState =
+    const pageState: HomePageState =
         !cocktails.ok || !bannersData.ok
             ? "error"
             : cocktailsData.length > 0 || banners.length > 0
@@ -68,7 +70,7 @@ export default async function Home() {
 
     return (
         <>
-            <DataStateNotice state={cocktailsState} pageLabel="Home" message={errorMessage} />
+            <DataStateNotice state={pageState} pageLabel="Home" message={errorMessage} />
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <div className="flex justify-start flex-wrap">
                 {cocktailsData.length > 0

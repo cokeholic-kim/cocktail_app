@@ -88,7 +88,7 @@ export default function DesignLabClient() {
                         renderStateMessage(cocktailState, "No cocktail sample data.", sampleErrorMessage)}
                     {visibleCocktails.map((cocktail) => (
                         <CocktailCard
-                            key={cocktail.cocktailName}
+                            key={cocktail.id}
                             imagePath={cocktail.imagePath}
                             cocktailName={cocktail.cocktailName}
                             description={cocktail.description}
@@ -116,10 +116,11 @@ export default function DesignLabClient() {
                 <div className="mt-4 flex justify-start flex-wrap">
                     {ingredientState === "loading" && renderSkeleton(3)}
                     {ingredientState !== "ready" &&
-                        renderStateMessage(ingredientState, "No ingredient sample data.", "Backend is unavailable. Showing ingredient preview data.")}
-                    {visibleIngredients.map((ingredient: IngredientCardData) => (
-                        <IngredientCard key={ingredient.ingredientName} ingredient={ingredient} size="md:w-1/4 w-1/3" />
-                    ))}
+                        renderStateMessage(ingredientState, "No ingredient sample data.", "Backend is unavailable. Ingredient preview cards are hidden in error state.")}
+                    {ingredientState !== "error" &&
+                        visibleIngredients.map((ingredient: IngredientCardData & { id: string }) => (
+                            <IngredientCard key={ingredient.id} ingredient={ingredient} size="md:w-1/4 w-1/3" />
+                        ))}
                     <NewIngredientCard
                         handleClickNewIngredient={() => setNewIngredientRequested((prev) => !prev)}
                         isLogin={isLogin}

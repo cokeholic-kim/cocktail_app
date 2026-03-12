@@ -11,17 +11,17 @@ export interface IngredientCardData {
 
 function IngredientCard({ ingredient, size }: { ingredient: IngredientCardData; size: string }) {
   return (
-    <div className={`p-6 ${uiTokenStyles.card.base} ${size.length > 0 ? size : ''}`}>
+    <div className={`p-6 ${uiTokenStyles.card.base} ${size ? size : ''}`}>
       <div className="w-full h-44 mb-4 relative">
-      <div className={uiTokenStyles.card.imageFrame}>
-      <Image
-          src={ingredient.imagePath}
-          alt={ingredient.ingredientName}
-          width={400}
-          height={300}
-          className="rounded-t-lg w-full h-full object-contain"
-        />
-      </div>
+        <div className={uiTokenStyles.card.imageFrame}>
+          <Image
+            src={ingredient.imagePath}
+            alt={ingredient.ingredientName}
+            width={400}
+            height={300}
+            className="rounded-t-lg w-full h-full object-contain"
+          />
+        </div>
       </div>
       <div className="mb-4">
         <p className={uiTokenStyles.card.title}>

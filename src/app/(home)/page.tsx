@@ -57,21 +57,16 @@ export default async function Home() {
     const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()]);
     const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data?.body ?? [] : [];
     const banners = bannersData.ok ? bannersData.data?.body ?? [] : [];
-    const errorMessage = getErrorMessage(
-        cocktails.ok ? undefined : cocktails.error,
-        bannersData.ok ? undefined : bannersData.error
-    );
-    const pageState: HomePageState =
-        !cocktails.ok || !bannersData.ok
-            ? "error"
-            : cocktailsData.length > 0 || banners.length > 0
-                ? "ready"
-                : "empty";
+    const bannerErrorMessage = bannersData.ok ? undefined : bannersData.error ?? undefined;
+    const cocktailErrorMessage = cocktails.ok ? undefined : cocktails.error ?? undefined;
+    const bannerState: HomePageState = !bannersData.ok ? "error" : banners.length > 0 ? "ready" : "empty";
+    const cocktailState: HomePageState = !cocktails.ok ? "error" : cocktailsData.length > 0 ? "ready" : "empty";
 
     return (
         <>
-            <DataStateNotice state={pageState} pageLabel="Home" message={errorMessage} />
+            <DataStateNotice state={bannerState} pageLabel="Home Banner" message={bannerErrorMessage} />
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
+            <DataStateNotice state={cocktailState} pageLabel="Home Cocktail" message={cocktailErrorMessage} />
             <div className="flex justify-start flex-wrap">
                 {cocktailsData.length > 0
                     ? cocktailsData.map((cocktail: CocktailCardProps, index: number) => {

@@ -50,8 +50,13 @@ export default function DesignLabClient() {
         [ingredientSearch]
     );
 
-    const visibleCocktails = getVisibleItems(cocktailState, filteredCocktails);
-    const visibleIngredients = getVisibleItems(ingredientState, filteredIngredients);
+    const resolvedCocktailState: DesignLabState =
+        cocktailState === "ready" && filteredCocktails.length === 0 ? "empty" : cocktailState;
+    const resolvedIngredientState: DesignLabState =
+        ingredientState === "ready" && filteredIngredients.length === 0 ? "empty" : ingredientState;
+
+    const visibleCocktails = getVisibleItems(resolvedCocktailState, filteredCocktails);
+    const visibleIngredients = getVisibleItems(resolvedIngredientState, filteredIngredients);
 
     return (
         <main className={uiTokenStyles.layout.section}>
@@ -76,6 +81,7 @@ export default function DesignLabClient() {
                             key={state}
                             type="button"
                             onClick={() => setCocktailState(state)}
+                            aria-pressed={cocktailState === state}
                             className={`px-3 py-1 rounded text-sm ${cocktailState === state ? "bg-black text-white" : "bg-gray-200"}`}
                         >
                             {label}
@@ -83,9 +89,9 @@ export default function DesignLabClient() {
                     ))}
                 </div>
                 <div className="mt-4 flex justify-start flex-wrap">
-                    {cocktailState === "loading" && renderSkeleton(2)}
-                    {cocktailState !== "ready" &&
-                        renderStateMessage(cocktailState, "No cocktail sample data.", sampleErrorMessage)}
+                    {resolvedCocktailState === "loading" && renderSkeleton(2)}
+                    {resolvedCocktailState !== "ready" &&
+                        renderStateMessage(resolvedCocktailState, "No cocktail sample data.", sampleErrorMessage)}
                     {visibleCocktails.map((cocktail) => (
                         <CocktailCard
                             key={cocktail.id}
@@ -107,6 +113,7 @@ export default function DesignLabClient() {
                             key={state}
                             type="button"
                             onClick={() => setIngredientState(state)}
+                            aria-pressed={ingredientState === state}
                             className={`px-3 py-1 rounded text-sm ${ingredientState === state ? "bg-black text-white" : "bg-gray-200"}`}
                         >
                             {label}
@@ -114,10 +121,10 @@ export default function DesignLabClient() {
                     ))}
                 </div>
                 <div className="mt-4 flex justify-start flex-wrap">
-                    {ingredientState === "loading" && renderSkeleton(3)}
-                    {ingredientState !== "ready" &&
-                        renderStateMessage(ingredientState, "No ingredient sample data.", "Backend is unavailable. Ingredient preview cards are hidden in error state.")}
-                    {ingredientState !== "error" &&
+                    {resolvedIngredientState === "loading" && renderSkeleton(3)}
+                    {resolvedIngredientState !== "ready" &&
+                        renderStateMessage(resolvedIngredientState, "No ingredient sample data.", "Backend is unavailable. Ingredient preview cards are hidden in error state.")}
+                    {resolvedIngredientState !== "error" &&
                         visibleIngredients.map((ingredient: IngredientCardData & { id: string }) => (
                             <IngredientCard key={ingredient.id} ingredient={ingredient} size="md:w-1/4 w-1/3" />
                         ))}

@@ -41,7 +41,7 @@ async function IngredientsPage() {
     const ingredientsData = await getIngredients();
     const isOffline = !ingredientsData.ok;
     const ingredients = ingredientsData.ok ? ingredientsData.data?.body ?? [] : [];
-    const errorMessage = !ingredientsData.ok ? ingredientsData.error : undefined;
+    const errorMessage = !ingredientsData.ok ? ingredientsData.error ?? undefined : undefined;
     const ingredientListState: DataViewState = isOffline
         ? "error"
         : ingredients.length > 0

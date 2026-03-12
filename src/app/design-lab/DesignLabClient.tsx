@@ -28,7 +28,6 @@ function renderSkeleton(count: number) {
 }
 
 function renderStateMessage(state: DesignLabState, emptyText: string, errorText: string) {
-    if (state === "loading") return renderSkeleton(2);
     if (state === "error") return <p className="text-red-500 text-sm mt-2 w-full">{errorText}</p>;
     if (state === "empty") return <p className="text-gray-500 text-sm mt-2 w-full">{emptyText}</p>;
     return null;
@@ -87,9 +86,9 @@ export default function DesignLabClient() {
                     {cocktailState === "loading" && renderSkeleton(2)}
                     {cocktailState !== "ready" &&
                         renderStateMessage(cocktailState, "No cocktail sample data.", sampleErrorMessage)}
-                    {visibleCocktails.map((cocktail, index) => (
+                    {visibleCocktails.map((cocktail) => (
                         <CocktailCard
-                            key={index}
+                            key={cocktail.cocktailName}
                             imagePath={cocktail.imagePath}
                             cocktailName={cocktail.cocktailName}
                             description={cocktail.description}
@@ -117,9 +116,9 @@ export default function DesignLabClient() {
                 <div className="mt-4 flex justify-start flex-wrap">
                     {ingredientState === "loading" && renderSkeleton(3)}
                     {ingredientState !== "ready" &&
-                        renderStateMessage(ingredientState, "No ingredient sample data.", "No ingredient fallback data due to error.")}
-                    {visibleIngredients.map((ingredient: IngredientCardData, index: number) => (
-                        <IngredientCard key={index} ingredient={ingredient} size="md:w-1/4 w-1/3" />
+                        renderStateMessage(ingredientState, "No ingredient sample data.", "Backend is unavailable. Showing ingredient preview data.")}
+                    {visibleIngredients.map((ingredient: IngredientCardData) => (
+                        <IngredientCard key={ingredient.ingredientName} ingredient={ingredient} size="md:w-1/4 w-1/3" />
                     ))}
                     <NewIngredientCard
                         handleClickNewIngredient={() => setNewIngredientRequested((prev) => !prev)}

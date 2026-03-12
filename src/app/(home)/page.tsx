@@ -46,11 +46,19 @@ async function getBanner() {
     });
 }
 
+function getErrorMessage(...errors: Array<string | undefined>) {
+    const visibleErrors = errors.filter(Boolean);
+    return visibleErrors.length > 0 ? visibleErrors.join(" | ") : undefined;
+}
+
 export default async function Home() {
     const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()]);
     const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data?.body ?? [] : [];
     const banners = bannersData.ok ? bannersData.data?.body ?? [] : [];
-    const errorMessage = !cocktails.ok ? cocktails.error : !bannersData.ok ? bannersData.error : undefined;
+    const errorMessage = getErrorMessage(
+        cocktails.ok ? undefined : cocktails.error,
+        bannersData.ok ? undefined : bannersData.error
+    );
     const cocktailsState: DataViewState =
         !cocktails.ok || !bannersData.ok
             ? "error"

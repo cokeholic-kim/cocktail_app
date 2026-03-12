@@ -42,9 +42,7 @@ export function DataStateNotice({ state, pageLabel, message }: DataStateNoticePr
     return (
         <div className={`mx-4 mt-4 rounded border p-3 text-sm ${getStatusClassName(state)}`}>
             <p className="font-semibold">{statusText}</p>
-            <p className="mt-1 text-xs opacity-80">
-                Page state changed: {state === "loading" ? "loading" : state === "error" ? "error" : "empty"}.
-            </p>
+            <p className="mt-1 text-xs opacity-80">Page state changed: {state}.</p>
         </div>
     );
 }

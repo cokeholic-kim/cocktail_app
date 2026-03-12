@@ -1,7 +1,8 @@
 import { CocktailCardProps } from "@/app/(common)/commonProps";
+import { DataViewState } from "@/app/(common)/components/dataStateNotice";
 import { IngredientCardData } from "@/app/(ingredients)/ingredients/IngredientCard";
 
-export type DesignLabState = "ready" | "loading" | "empty" | "error";
+export type DesignLabState = DataViewState;
 
 export const demoCocktails: CocktailCardProps[] = [
     {

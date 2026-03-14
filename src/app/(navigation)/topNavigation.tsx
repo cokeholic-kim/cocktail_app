@@ -6,41 +6,51 @@ import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
-import { getCookie, setCookie } from "cookies-next";
-import { AUTH_COOKIE_NAME } from "../(common)/constants";
-
-const clearAuthorizationCookie = () => {
-  setCookie(AUTH_COOKIE_NAME, '', { path: "/", maxAge: -1 });
-};
+import { BASE_URL } from "../(common)/common";
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
     const { isLogin , setIsLogin } = useLoginContext();
 
+    const checkLoginSession = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/my`, {
+                method: "GET",
+                credentials: "include",
+            });
+
+            setIsLogin(response.ok);
+        } catch (error) {
+            console.error("세션 검증 실패:", error);
+            setIsLogin(false);
+        }
+    };
+
     useEffect(() => {
-      const authToken = getCookie(AUTH_COOKIE_NAME);
-      if(authToken){
-        setIsLogin(true);
-      }
+        void checkLoginSession();
     }, [setIsLogin]);
 
     useEffect(() => {
       if (!isLogin) return;
 
       const timer = setInterval(() => {
-        const authToken = getCookie(AUTH_COOKIE_NAME);
-        
-        if(!authToken){
-          setIsLogin(false);
-        }
+        void checkLoginSession();
       }, 600000);
 
       return () => clearInterval(timer);
     }, [isLogin, setIsLogin]);
 
-    const handleLogout = () => {
-      setIsLogin(false);
-      clearAuthorizationCookie();
+    const handleLogout = async () => {
+      try {
+        await fetch(`${BASE_URL}/logout`, {
+          method: "POST",
+          credentials: "include",
+        });
+      } catch (error) {
+        console.error("로그아웃 API 실패:", error);
+      } finally {
+        setIsLogin(false);
+      }
     }
 
     return (

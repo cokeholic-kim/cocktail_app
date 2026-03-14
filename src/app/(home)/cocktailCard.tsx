@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CocktailCardProps } from '../(common)/commonProps';
 import { uiTokenStyles } from '@/app/(common)/components/uiTokens';
+import { encodeRouteSegment } from '@/app/(common)/securityValidation';
 
 function CocktailCard({imagePath,cocktailName,description}:CocktailCardProps) {
   
@@ -34,7 +35,7 @@ function CocktailCard({imagePath,cocktailName,description}:CocktailCardProps) {
       </div>
       <div>
         <Link
-          href={`/cocktails/${cocktailName}`}
+          href={`/cocktails/${encodeRouteSegment(cocktailName)}`}
           className={uiTokenStyles.button.primary}
           >
           Read more

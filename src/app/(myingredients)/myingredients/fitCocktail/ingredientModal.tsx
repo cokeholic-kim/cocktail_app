@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { encodeRouteSegment } from '@/app/(common)/securityValidation';
 
 function IngredientModal({includeIngredients,excludeIngredients}:{includeIngredients:string[],excludeIngredients:string[]}) {
   return (
@@ -9,7 +10,7 @@ function IngredientModal({includeIngredients,excludeIngredients}:{includeIngredi
         {includeIngredients.map((ingredient, index) => {
           return (
             <p key={index}>
-              <Link href={`/ingredients/${ingredient}`} className="mr-3">
+              <Link href={`/ingredients/${encodeRouteSegment(ingredient)}`} className="mr-3">
                 {ingredient}
               </Link>
             </p>
@@ -24,7 +25,7 @@ function IngredientModal({includeIngredients,excludeIngredients}:{includeIngredi
         {excludeIngredients.map((ingredient, index) => {
           return (
             <p key={index}>
-              <Link href={`/ingredients/${ingredient}`} className="mr-3">
+              <Link href={`/ingredients/${encodeRouteSegment(ingredient)}`} className="mr-3">
                 {ingredient}
               </Link>
             </p>

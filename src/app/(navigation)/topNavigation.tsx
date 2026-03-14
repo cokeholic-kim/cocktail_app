@@ -19,10 +19,19 @@ export function TopNavigation() {
                 credentials: "include",
             });
 
-            setIsLogin(response.ok);
+            if (response.ok) {
+                setIsLogin(true);
+                return;
+            }
+
+            if (response.status === 401 || response.status === 403) {
+                setIsLogin(false);
+                return;
+            }
+
+            console.error(`세션 조회 실패(status: ${response.status}). 네트워크 또는 서버 오류로 기존 로그인 상태를 유지합니다.`);
         } catch (error) {
-            console.error("세션 검증 실패:", error);
-            setIsLogin(false);
+            console.error("세션 조회 중 오류가 발생했습니다:", error);
         }
     };
 
@@ -42,16 +51,31 @@ export function TopNavigation() {
 
     const handleLogout = async () => {
       try {
-        await fetch(`${BASE_URL}/logout`, {
+        const csrfToken = document.cookie
+          .split("; ")
+          .find((item) => item.startsWith("XSRF-TOKEN="))
+          ?.split("=")[1];
+
+        const headers = csrfToken
+          ? { "X-CSRF-Token": decodeURIComponent(csrfToken) }
+          : undefined;
+
+        const response = await fetch(`${BASE_URL}/logout`, {
           method: "POST",
           credentials: "include",
+          ...(headers ? { headers } : {}),
         });
-      } catch (error) {
-        console.error("로그아웃 API 실패:", error);
-      } finally {
+
+        if (!response.ok) {
+          console.error(`로그아웃 요청 실패(status: ${response.status})`);
+          return;
+        }
+
         setIsLogin(false);
+      } catch (error) {
+        console.error("로그아웃 API 호출 실패:", error);
       }
-    }
+    };
 
     return (
       <nav className="bg-gray-100">

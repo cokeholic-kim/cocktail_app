@@ -2,7 +2,6 @@ import Image from 'next/image';
 import React from 'react'
 import { CocktailRequest } from './../AddCocktailSwiper';
 import { Ingredient } from '@/app/(ingredients)/ingredients/page';
-import { getCookie } from 'cookies-next';
 import { BASE_URL } from '@/app/(common)/common';
 
 interface FinalCocktailProps{
@@ -106,12 +105,9 @@ function FinalCocktail({cocktailRequest,setCocktailRequest}:FinalCocktailProps) 
       }
       formData.append("description",cocktailRequest.description)
       try{
-        const authToken = getCookie('Authorization')
         const response = await fetch(`${BASE_URL}/user/saveCocktail`, {
           method: "POST",
-          headers: {
-            "Authorization": `${authToken}`
-          },
+          credentials: "include",
           body:formData,
         });
 

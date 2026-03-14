@@ -1,5 +1,4 @@
 import { BASE_URL } from "@/app/(common)/common";
-import { getCookie } from "cookies-next";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -142,12 +141,9 @@ export default function NewIngredientForm({setNewIngredientPage}:{setNewIngredie
       formData.append("description", newIngredient.description);
       formData.append("category", newIngredient.category);
       try{
-        const authToken = getCookie("Authorization")
         const response = await fetch(`${BASE_URL}/user/ingredientRegister`,{
           method: "POST",
-          headers: {
-            "Authorization": `${authToken}`,
-          },
+          credentials: "include",
           body: formData,
         })
         if(response.ok) {

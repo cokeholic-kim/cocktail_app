@@ -15,7 +15,7 @@ function LoginForm() {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
         
-        try {
+       try {
           const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',
             headers: {
@@ -26,9 +26,6 @@ function LoginForm() {
           });
           
           if (response.ok) {
-                const headers = response.headers;
-                const jwtToken = headers.get("Authorization");
-
                 setIsLogin(true);
                 router.push('/');
             } else {

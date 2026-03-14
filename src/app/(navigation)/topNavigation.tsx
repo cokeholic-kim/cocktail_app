@@ -6,42 +6,76 @@ import logoImage from "/public/assets/icon-384x384.png"
 import classNames from "classnames";
 import { useEffect, useState } from "react";
 import { useLoginContext } from "../(context)/LoginContext";
-import { getCookie, setCookie } from "cookies-next";
-import { AUTH_COOKIE_NAME } from "../(common)/constants";
-
-const clearAuthorizationCookie = () => {
-  setCookie(AUTH_COOKIE_NAME, '', { path: "/", maxAge: -1 });
-};
+import { BASE_URL } from "../(common)/common";
 
 export function TopNavigation() {
     const [menuToggle , setMenuToggle] = useState(false);
     const { isLogin , setIsLogin } = useLoginContext();
 
+    const checkLoginSession = async () => {
+        try {
+            const response = await fetch(`${BASE_URL}/my`, {
+                method: "GET",
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                setIsLogin(true);
+                return;
+            }
+
+            if (response.status === 401 || response.status === 403) {
+                setIsLogin(false);
+                return;
+            }
+
+            console.error(`세션 조회 실패(status: ${response.status}). 네트워크 또는 서버 오류로 기존 로그인 상태를 유지합니다.`);
+        } catch (error) {
+            console.error("세션 조회 중 오류가 발생했습니다:", error);
+        }
+    };
+
     useEffect(() => {
-      const authToken = getCookie(AUTH_COOKIE_NAME);
-      if(authToken){
-        setIsLogin(true);
-      }
+        void checkLoginSession();
     }, [setIsLogin]);
 
     useEffect(() => {
       if (!isLogin) return;
 
       const timer = setInterval(() => {
-        const authToken = getCookie(AUTH_COOKIE_NAME);
-        
-        if(!authToken){
-          setIsLogin(false);
-        }
+        void checkLoginSession();
       }, 600000);
 
       return () => clearInterval(timer);
     }, [isLogin, setIsLogin]);
 
-    const handleLogout = () => {
-      setIsLogin(false);
-      clearAuthorizationCookie();
-    }
+    const handleLogout = async () => {
+      try {
+        const csrfToken = document.cookie
+          .split("; ")
+          .find((item) => item.startsWith("XSRF-TOKEN="))
+          ?.split("=")[1];
+
+        const headers = csrfToken
+          ? { "X-CSRF-Token": decodeURIComponent(csrfToken) }
+          : undefined;
+
+        const response = await fetch(`${BASE_URL}/logout`, {
+          method: "POST",
+          credentials: "include",
+          ...(headers ? { headers } : {}),
+        });
+
+        if (!response.ok) {
+          console.error(`로그아웃 요청 실패(status: ${response.status})`);
+          return;
+        }
+
+        setIsLogin(false);
+      } catch (error) {
+        console.error("로그아웃 API 호출 실패:", error);
+      }
+    };
 
     return (
       <nav className="bg-gray-100">

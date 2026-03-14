@@ -57,8 +57,6 @@ function CocktailIngredient({ingredients,cocktailRequest,setCocktailRequest}:Coc
         ? prevState.ingredients.filter((item) => item !== ingredient)
         : [...prevState.ingredients, ingredient],
     }));
-
-    console.log(cocktailRequest.ingredients);
   };
   return (
     <div className="">

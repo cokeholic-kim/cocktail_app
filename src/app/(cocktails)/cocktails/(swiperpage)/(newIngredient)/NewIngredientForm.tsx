@@ -166,7 +166,6 @@ export default function NewIngredientForm({setNewIngredientPage}:{setNewIngredie
         const target = e.target as HTMLInputElement
         setNewIngredient((prevState) => {
             const { name, value } = e.target;
-            console.log(prevState);
             if(name === "image"){
                 return {
                   ...prevState || {},
@@ -182,7 +181,6 @@ export default function NewIngredientForm({setNewIngredientPage}:{setNewIngredie
       }else{
           setNewIngredient((prevState) => {
             const { name, value } = e.target;
-            console.log(prevState);
             return {
               ...prevState,
               [name]: value,

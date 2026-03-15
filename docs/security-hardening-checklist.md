@@ -21,6 +21,19 @@
 
 ## 배포 후 확인
 - `/` 핵심 페이지 로드 시 CSP/헤더 누락 에러 확인
+- API 오류 시에도 UI 레이아웃이 파괴되지 않는지 확인
+- `npm run build`와 `npm run lint` 통과 여부 기록
+
+## 의존성 취약점 점검 절차
+- 정기 실행 명령:
+  - `npm run check:security-audit`
+  - `npm run check:deps-compat`
+  - `npm run check:ci`
+- 심각도 기준 대응 우선순위:
+  - `high`, `critical`: 즉시 수정/차단 (`P0`, `P1`)
+  - `moderate`: 다음 스프린트 내 대응 (`P2`)
+- lockfile 변경 규칙:
+  - `package-lock.json` 변경은 이슈 승인 후, `npm` 결과 재현 가능 상태(변경된 패키지, 변경 사유, 영향 범위)와 함께 PR에 명시
   - 예시: `curl -I https://<도메인>/ | grep -Ei "content-security-policy|x-frame-options|strict-transport-security|referrer-policy"`
   - 기대값: `content-security-policy`, `x-frame-options`, `strict-transport-security`, `referrer-policy` 헤더가 모두 응답에 존재
 - API 오류 시에도 UI 레이아웃이 파괴되지 않는지 확인

@@ -12,6 +12,7 @@
     "check:deploy-gate": "powershell -ExecutionPolicy Bypass -File .\\scripts\\p0-deploy-gate.ps1",
     "check:p0-smoke": "powershell -ExecutionPolicy Bypass -File .\\scripts\\p0-smoke-tests.ps1",
     "check:upgrade-regression": "npm run lint && npm run build && npm run check:p0-smoke",
+    "check:security-audit": "npm audit --audit-level=high --omit=dev",
     "start": "next start",
     "lint": "eslint ."
   },

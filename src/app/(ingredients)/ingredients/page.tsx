@@ -2,7 +2,12 @@ import { BASE_URL } from "@/app/(common)/common";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
 import IngredientPageBody from "./IngredientPageBody";
-import { DataStateNotice, DataViewState } from "@/app/(common)/components/dataStateNotice";
+import {
+    DataStateNotice,
+    DataViewState,
+    normalizeErrorMessage,
+    resolveDataState,
+} from "@/app/(common)/components/dataStateNotice";
 
 type ApiEnvelope<T> = {
     body: T;
@@ -39,14 +44,9 @@ async function getIngredients() {
 
 async function IngredientsPage() {
     const ingredientsData = await getIngredients();
-    const isOffline = !ingredientsData.ok;
     const ingredients = ingredientsData.ok ? ingredientsData.data?.body ?? [] : [];
-    const errorMessage = !ingredientsData.ok ? ingredientsData.error ?? undefined : undefined;
-    const ingredientListState: DataViewState = isOffline
-        ? "error"
-        : ingredients.length > 0
-            ? "ready"
-            : "empty";
+    const ingredientListState: DataViewState = resolveDataState(ingredientsData.ok, ingredients.length > 0);
+    const errorMessage = normalizeErrorMessage([ingredientsData.error]);
 
     return (
         <div>

@@ -3,6 +3,7 @@ import MyIngredientBody from "./MyIngredientBody";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import type { Ingredient } from "@/app/(ingredients)/ingredients/page";
 import { OfflineDataNotice } from "@/app/(common)/offlineMode";
+import { DataViewState, normalizeErrorMessage, resolveDataState } from "@/app/(common)/components/dataStateNotice";
 
 type ApiEnvelope<T> = {
     body: T;
@@ -26,13 +27,13 @@ async function getIngredient() {
 
 async function MyIngredient() {
     const ingredientData = await getIngredient();
-    const isOffline = !ingredientData.ok;
     const ingredients = ingredientData.ok ? ingredientData.data?.body ?? [] : [];
-    const errorMessage = !ingredientData.ok ? ingredientData.error : undefined;
+    const errorMessage = normalizeErrorMessage([ingredientData.error]);
+    const ingredientListState: DataViewState = resolveDataState(ingredientData.ok, ingredients.length > 0);
 
     return (
         <div>
-            {isOffline && <OfflineDataNotice pageLabel="My Ingredients" errorMessage={errorMessage} />}
+            {ingredientListState === "error" && <OfflineDataNotice pageLabel="My Ingredients" errorMessage={errorMessage} />}
             <MyIngredientBody ingredients={ingredients.length > 0 ? ingredients : fallbackIngredients} />
         </div>
     );

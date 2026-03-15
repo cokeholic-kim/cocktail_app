@@ -88,6 +88,7 @@ export function TopNavigation() {
                             <Link
                                 href={"/"}
                                 className="flex items-center py-5 px-2 text-gray-700"
+                                aria-label="홈으로 이동"
                             >
                                 <div className="w-10 md:w-20 cursor-pointer overflow-hidden rounded-full mr-3">
                                     <Image
@@ -127,7 +128,12 @@ export function TopNavigation() {
                         </div>
                     )}
                     <div className="md:hidden flex items-center text-black">
-                        <button onClick={() => setMenuToggle(!menuToggle)}>
+                        <button
+                            type="button"
+                            aria-expanded={menuToggle}
+                            aria-label={menuToggle ? "메뉴 닫기" : "메뉴 열기"}
+                            onClick={() => setMenuToggle(!menuToggle)}
+                        >
                             {menuToggle ? (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +172,11 @@ export function TopNavigation() {
             <div className={classNames("md:hidden text-black", { hidden: !menuToggle })}>
                 {!isLogin ? (
                     <>
-                        <Link href={"/login"} className="block py-2 px-4 text-sm hover:bg-gray-200" onClick={() => setMenuToggle(false)}>
+                        <Link
+                            href={"/login"}
+                            className="block py-2 px-4 text-sm hover:bg-gray-200"
+                            onClick={() => setMenuToggle(false)}
+                        >
                             Login
                         </Link>
                         <Link href={"/join"} className="block py-2 px-4 text-sm hover:bg-gray-200" onClick={() => setMenuToggle(false)}>

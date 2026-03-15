@@ -1,23 +1,28 @@
-"use client"
+"use client";
 
-import React, { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from "next/navigation"
-import { BASE_URL } from '@/app/(common)/common';
-import { CocktailFit } from '@/app/(common)/commonProps';
-import FitCocktailCard from './fitCocktailCard';
-import { isValidListItem, sanitizeText } from '@/app/(common)/securityValidation';
-import { logWarn } from '@/app/(common)/safeLogger';
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { BASE_URL } from "@/app/(common)/common";
+import { CocktailFit } from "@/app/(common)/commonProps";
+import FitCocktailCard from "./fitCocktailCard";
+import { isValidListItem, sanitizeText } from "@/app/(common)/securityValidation";
+import { logWarn } from "@/app/(common)/safeLogger";
 
-const NO_INPUT_ERROR = "선택한 재료가 없어 추천할 칵테일이 없습니다.";
-const NO_RESULT_MESSAGE = "조건에 맞는 칵테일을 찾지 못했습니다.";
-const NETWORK_ERROR_MESSAGE = "네트워크 오류로 추천 목록을 불러오지 못했습니다.";
+const NO_INPUT_ERROR = "선택된 재료가 없습니다. 재료를 선택해 주세요.";
+const NO_RESULT_MESSAGE = "결과가 없습니다. 다른 재료 조합으로 다시 시도해 주세요.";
+const NETWORK_ERROR_MESSAGE = "네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
+const LOADING_MESSAGE = "검색 중입니다. 잠시만 기다려 주세요.";
 
 const parseCheckedIngredients = (value: string | null): string[] => {
-    if (!value) return [];
+    if (!value) {
+        return [];
+    }
 
     try {
         const parsed = JSON.parse(value);
-        if (!Array.isArray(parsed)) return [];
+        if (!Array.isArray(parsed)) {
+            return [];
+        }
         const sanitized = parsed
             .filter((item): item is string => typeof item === "string")
             .filter((item): item is string => isValidListItem(item))
@@ -35,9 +40,9 @@ async function sendIngredientsToAPI(ingredientNames: string[]) {
     const jsonData = { myIngredient: ingredientNames };
     try {
         const response = await fetch(`${BASE_URL}/ingredient/getFitCocktailList`, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(jsonData),
         });
@@ -56,10 +61,10 @@ async function sendIngredientsToAPI(ingredientNames: string[]) {
         return { ok: true, error: null, body: responseData.body ?? [] };
     } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown fetch error";
-        logWarn('Error sending ingredients to API:', error);
+        logWarn("Error sending ingredients to API:", error);
         return { ok: false, error: message, body: [] as CocktailFit[] };
     }
-};
+}
 
 const moveCocktailWithOutExcludeIngredient = (cocktails: CocktailFit[]) => {
     const withExclude: CocktailFit[] = [];
@@ -74,7 +79,7 @@ const moveCocktailWithOutExcludeIngredient = (cocktails: CocktailFit[]) => {
     });
 
     return [...withoutExclude, ...withExclude];
-}
+};
 
 function Ingredients() {
     const param = useSearchParams();
@@ -82,7 +87,7 @@ function Ingredients() {
     const ingredients = useMemo(() => parseCheckedIngredients(checkedIngredients), [checkedIngredients]);
 
     const [cocktail, setCocktail] = useState<CocktailFit[]>([]);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -95,7 +100,7 @@ function Ingredients() {
             }
 
             setLoading(true);
-            setErrorMessage('');
+            setErrorMessage("");
 
             const { ok, error, body } = await sendIngredientsToAPI(ingredients);
             if (!ok) {
@@ -115,13 +120,17 @@ function Ingredients() {
             setCocktail(moveCocktailWithOutExcludeIngredient(body));
             setLoading(false);
         };
-        fetchData();
+        void fetchData();
     }, [ingredients]);
 
     return (
         <div className="flex justify-start flex-wrap">
-            {errorMessage && <p className="w-full m-4 text-sm rounded border border-red-300 bg-red-50 p-3 text-red-700">{errorMessage}</p>}
-            {!errorMessage && loading && <p className="w-full m-4 text-sm text-gray-500">추천 칵테일을 불러오는 중...</p>}
+            {errorMessage && (
+                <p className="w-full m-4 text-sm rounded border border-red-300 bg-red-50 p-3 text-red-700" role="status" aria-live="polite">
+                    {errorMessage}
+                </p>
+            )}
+            {!errorMessage && loading && <p className="w-full m-4 text-sm text-gray-500">{LOADING_MESSAGE}</p>}
             {cocktail.map((data, index) => {
                 return <FitCocktailCard key={index} data={data} />;
             })}
@@ -129,5 +138,4 @@ function Ingredients() {
     );
 }
 
-export default Ingredients
-
+export default Ingredients;

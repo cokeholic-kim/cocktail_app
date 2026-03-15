@@ -4,7 +4,12 @@ import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
-import { DataStateNotice, DataViewState } from "@/app/(common)/components/dataStateNotice";
+import {
+    DataStateNotice,
+    DataViewState,
+    normalizeErrorMessage,
+    resolveDataState,
+} from "@/app/(common)/components/dataStateNotice";
 
 type ApiEnvelope<T> = {
     body: T;
@@ -48,19 +53,14 @@ async function getBanner() {
     });
 }
 
-function getErrorMessage(...errors: Array<string | null | undefined>) {
-    const visibleErrors = errors.filter((error): error is string => Boolean(error));
-    return visibleErrors.length > 0 ? visibleErrors.join(" | ") : undefined;
-}
-
 export default async function Home() {
     const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()]);
     const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data?.body ?? [] : [];
     const banners = bannersData.ok ? bannersData.data?.body ?? [] : [];
-    const bannerErrorMessage = bannersData.ok ? undefined : bannersData.error ?? undefined;
-    const cocktailErrorMessage = cocktails.ok ? undefined : cocktails.error ?? undefined;
-    const bannerState: HomePageState = !bannersData.ok ? "error" : banners.length > 0 ? "ready" : "empty";
-    const cocktailState: HomePageState = !cocktails.ok ? "error" : cocktailsData.length > 0 ? "ready" : "empty";
+    const bannerErrorMessage = normalizeErrorMessage([bannersData.error]);
+    const cocktailErrorMessage = normalizeErrorMessage([cocktails.error]);
+    const bannerState: HomePageState = resolveDataState(bannersData.ok, banners.length > 0);
+    const cocktailState: HomePageState = resolveDataState(cocktails.ok, cocktailsData.length > 0);
 
     return (
         <>

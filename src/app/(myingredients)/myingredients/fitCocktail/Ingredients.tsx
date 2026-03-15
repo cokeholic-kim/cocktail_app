@@ -19,8 +19,8 @@ const parseCheckedIngredients = (value: string | null): string[] => {
         if (!Array.isArray(parsed)) return [];
         const sanitized = parsed
             .filter((item): item is string => typeof item === "string")
-            .map((item) => sanitizeText(item))
             .filter((item): item is string => isValidListItem(item))
+            .map((item) => sanitizeText(item))
             .slice(0, 15);
 
         return sanitized;

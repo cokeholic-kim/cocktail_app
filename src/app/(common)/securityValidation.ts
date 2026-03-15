@@ -1,5 +1,5 @@
 export const sanitizeText = (value: string): string => {
-    return value.replace(/[\u0000-\u001F\u007F]/g, "").trim();
+    return value.replace(/[\x00-\x1F\x7F]/g, "").trim();
 };
 
 export const encodeRouteSegment = (value: string, maxLength = 200): string => {

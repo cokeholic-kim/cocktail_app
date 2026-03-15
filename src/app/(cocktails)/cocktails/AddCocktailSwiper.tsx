@@ -46,8 +46,6 @@ function AddCocktailSwiper({glass,method,ingredients}:{glass:string[],method:str
       description: '',
     });
 
-    console.log(cocktailRequest.image !== null)
-
     return (
       <div>
         <Swiper

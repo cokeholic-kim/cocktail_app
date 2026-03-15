@@ -1,11 +1,18 @@
-import type { Metadata } from 'next';
-import DesignLabClient from './DesignLabClient';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import { isDebugUiEnabled } from "@/app/(common)/environment";
+import DesignLabClient from "./DesignLabClient";
 
 export const metadata: Metadata = {
-  title: 'Design Lab',
-  description: '컴포넌트 기반 UI 검증 페이지',
+    title: "Design Lab",
+    description: "Design Lab은 컴포넌트 검증 및 UI 실험을 위한 개발 전용 페이지입니다.",
 };
 
 export default function DesignLabPage() {
-  return <DesignLabClient />;
+    if (!isDebugUiEnabled) {
+        notFound();
+    }
+
+    return <DesignLabClient />;
 }

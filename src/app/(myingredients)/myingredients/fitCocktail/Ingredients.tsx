@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { BASE_URL } from '@/app/(common)/common';
 import { CocktailFit } from '@/app/(common)/commonProps';
 import FitCocktailCard from './fitCocktailCard';
+import { isValidListItem, sanitizeText } from '@/app/(common)/securityValidation';
 
 const NO_INPUT_ERROR = "선택한 재료가 없어 추천할 칵테일이 없습니다.";
 const NO_RESULT_MESSAGE = "조건에 맞는 칵테일을 찾지 못했습니다.";
@@ -16,7 +17,13 @@ const parseCheckedIngredients = (value: string | null): string[] => {
     try {
         const parsed = JSON.parse(value);
         if (!Array.isArray(parsed)) return [];
-        return parsed.filter((item): item is string => typeof item === "string");
+        const sanitized = parsed
+            .filter((item): item is string => typeof item === "string")
+            .filter((item): item is string => isValidListItem(item))
+            .map((item) => sanitizeText(item))
+            .slice(0, 15);
+
+        return sanitized;
     } catch (error) {
         console.error("Failed to parse checkedIngredients:", error);
         return [];

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { OfflineDataNotice } from "@/app/(common)/offlineMode";
+import { encodeRouteSegment } from '@/app/(common)/securityValidation';
 
 type ApiEnvelope<T> = {
     body: T;
@@ -70,7 +71,7 @@ async function IngredientDetail({ params }: { params: Promise<{ name: string }> 
                                     className="w-full h-full object-contain"
                                 />
                             </div>
-                            <Link href={`/cocktails/${cocktail.cocktailName}`}>
+                            <Link href={`/cocktails/${encodeRouteSegment(cocktail.cocktailName)}`}>
                                 <p className="ml-5 text-base">{cocktail.cocktailName}</p>
                             </Link>
                         </li>

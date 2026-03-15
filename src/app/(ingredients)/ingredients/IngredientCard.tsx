@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { uiTokenStyles } from '@/app/(common)/components/uiTokens';
+import { encodeRouteSegment } from '@/app/(common)/securityValidation';
 
 export interface IngredientCardData {
   ingredientName: string;
@@ -40,7 +41,7 @@ function IngredientCard({ ingredient, size }: { ingredient: IngredientCardData; 
       </div>
       <div>
         <Link
-          href={`/ingredients/${ingredient.ingredientName}`}
+          href={`/ingredients/${encodeRouteSegment(ingredient.ingredientName)}`}
           className={uiTokenStyles.button.primary}
         >
           Read more

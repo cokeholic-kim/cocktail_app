@@ -1,26 +1,32 @@
-import Image from "next/image"
-import { banner } from "./page"
+import Image from "next/image";
+import Link from "next/link";
 
-interface BannerSlideProps{
-  banner:banner
+import type { HomeBanner } from "@/app/design-lab/page";
+import { uiTokenStyles } from "@/app/(common)/components/uiTokens";
+
+interface BannerSlideProps {
+    banner: HomeBanner;
 }
 
-function BannerSlide({banner}:BannerSlideProps) {
-  return (
-    <div className="w-full h-96">
-      <div className="w-full h-full relative">
-        <div className="absolute inset-0 bg-slate-300 flex items-center justify-center">
-          <Image
-            src={banner.imagePath}
-            alt={banner.title}
-            width={400}
-            height={300}
-            className="rounded-t-lg w-full h-full object-contain"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
+export default function BannerSlide({ banner }: BannerSlideProps) {
+    const imageAlt = banner.title || "Cocktail banner";
 
-export default BannerSlide
+    return (
+        <Link href={banner.src} className="group block">
+            <div className="h-96 w-full">
+                <div className="relative h-full w-full">
+                    <div className={uiTokenStyles.card.imageFrame}>
+                        <Image
+                            src={banner.imagePath}
+                            alt={imageAlt}
+                            width={400}
+                            height={300}
+                            className="h-full w-full rounded-t-lg object-cover"
+                            sizes="(min-width: 768px) 100vw, 100vw"
+                        />
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+}

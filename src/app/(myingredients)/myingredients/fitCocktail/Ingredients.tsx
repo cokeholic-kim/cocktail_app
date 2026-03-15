@@ -8,10 +8,10 @@ import FitCocktailCard from "./fitCocktailCard";
 import { isValidListItem, sanitizeText } from "@/app/(common)/securityValidation";
 import { logWarn } from "@/app/(common)/safeLogger";
 
-const NO_INPUT_ERROR = "선택된 재료가 없습니다. 재료를 선택해 주세요.";
-const NO_RESULT_MESSAGE = "결과가 없습니다. 다른 재료 조합으로 다시 시도해 주세요.";
-const NETWORK_ERROR_MESSAGE = "네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.";
-const LOADING_MESSAGE = "검색 중입니다. 잠시만 기다려 주세요.";
+const NO_INPUT_ERROR = "선택한 재료가 없습니다. 목록을 다시 선택해 주세요.";
+const NO_RESULT_MESSAGE = "검색 결과가 없습니다. 재료 조합으로 만든 칵테일을 찾지 못했습니다.";
+const NETWORK_ERROR_MESSAGE = "데이터 요청이 실패했습니다. 잠시 후 다시 시도해 주세요.";
+const LOADING_MESSAGE = "칵테일을 불러오는 중입니다. 잠시만 기다려 주세요.";
 
 const parseCheckedIngredients = (value: string | null): string[] => {
     if (!value) {
@@ -126,11 +126,11 @@ function Ingredients() {
     return (
         <div className="flex justify-start flex-wrap">
             {errorMessage && (
-                <p className="w-full m-4 text-sm rounded border border-red-300 bg-red-50 p-3 text-red-700" role="status" aria-live="polite">
+                <p className="m-4 w-full rounded border border-red-300 bg-red-50 p-3 text-sm text-red-700" role="status" aria-live="polite">
                     {errorMessage}
                 </p>
             )}
-            {!errorMessage && loading && <p className="w-full m-4 text-sm text-gray-500">{LOADING_MESSAGE}</p>}
+            {!errorMessage && loading && <p className="m-4 w-full text-sm text-gray-500">{LOADING_MESSAGE}</p>}
             {cocktail.map((data, index) => {
                 return <FitCocktailCard key={index} data={data} />;
             })}

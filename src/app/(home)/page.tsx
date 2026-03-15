@@ -17,7 +17,7 @@ type ApiEnvelope<T> = {
 
 type HomePageState = Exclude<DataViewState, "loading">;
 
-export interface banner {
+export interface HomeBanner {
     imagePath: string;
     title: string;
     src: string;
@@ -32,7 +32,7 @@ const fallbackCocktails: CocktailCardProps[] = [
     },
 ];
 
-const fallbackBanners: banner[] = [
+const fallbackBanners: HomeBanner[] = [
     {
         imagePath: "/assets/icon-384x384.png",
         title: "Cocktail App",
@@ -48,7 +48,7 @@ async function getCocktail() {
 }
 
 async function getBanner() {
-    return fetchWithCookie<ApiEnvelope<banner[]>>(`${BASE_URL}/banner/getAllBanner`, AUTH_COOKIE_NAME, {
+    return fetchWithCookie<ApiEnvelope<HomeBanner[]>>(`${BASE_URL}/banner/getAllBanner`, AUTH_COOKIE_NAME, {
         fallback: { body: [] },
     });
 }
@@ -68,26 +68,14 @@ export default async function Home() {
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <DataStateNotice state={cocktailState} pageLabel="Home Cocktail" message={cocktailErrorMessage} />
             <div className="flex justify-start flex-wrap">
-                {cocktailsData.length > 0
-                    ? cocktailsData.map((cocktail: CocktailCardProps, index: number) => {
-                        return (
-                            <CocktailCard
-                                key={index}
-                                imagePath={cocktail.imagePath}
-                                cocktailName={cocktail.cocktailName}
-                                description={cocktail.description}
-                            />
-                        );
-                    })
-                    : fallbackCocktails.map((cocktail: CocktailCardProps, index: number) => (
-                        <CocktailCard
-                            key={index}
-                            imagePath={cocktail.imagePath}
-                            cocktailName={cocktail.cocktailName}
-                            description={cocktail.description}
-                        />
-                    ))
-                }
+                {(cocktailsData.length > 0 ? cocktailsData : fallbackCocktails).map((cocktail, index) => (
+                    <CocktailCard
+                        key={index}
+                        imagePath={cocktail.imagePath}
+                        cocktailName={cocktail.cocktailName}
+                        description={cocktail.description}
+                    />
+                ))}
             </div>
         </>
     );

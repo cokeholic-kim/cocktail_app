@@ -1,53 +1,60 @@
-"use client"
+"use client";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/scrollbar";
 
-import { Swiper, SwiperSlide } from 'swiper/react'
-import SwiperCore from "swiper"
-import { useRef } from 'react';
-import { Navigation, Scrollbar } from 'swiper/modules';
+import { useRef } from "react";
+import { Navigation, Scrollbar } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore from "swiper";
+
+import type { HomeBanner } from "@/app/design-lab/page";
 import BannerSlide from "./BannerSlide";
-import { banner } from "./page";
 
 interface MainBannerProps {
-  banners : banner[]
+    banners: HomeBanner[];
 }
-function MainBanner({banners}:MainBannerProps) {
+
+export default function MainBanner({ banners }: MainBannerProps) {
     const swiperRef = useRef<SwiperCore | null>(null);
-  return (
-    <div className=" relative">
-        <Swiper
-        onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-        }}
-        modules={[Navigation, Scrollbar]}
-        spaceBetween={50}
-        slidesPerView={1}
-        navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        }}
-        scrollbar={{
-            el: ".swiper-scrollbar",
-            draggable: true,
-        }}
-        >
-          {banners.map((banner:banner,index:number)=> {
-            return (
-              <SwiperSlide key={index}>
-                <BannerSlide banner={banner}/>
-              </SwiperSlide>
-            )
-          })}
-        </Swiper>
-        <div className="flex justify-between mt-4">
-          <div className="swiper-button-prev text-white cursor-pointer"></div>
-          <div className="swiper-button-next text-white cursor-pointer"></div>
+
+    return (
+        <div className="relative">
+            <Swiper
+                onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                }}
+                modules={[Navigation, Scrollbar]}
+                spaceBetween={16}
+                slidesPerView={1}
+                navigation={{
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                }}
+                scrollbar={{
+                    el: ".swiper-scrollbar",
+                    draggable: true,
+                }}
+            >
+                {banners.map((banner) => (
+                    <SwiperSlide key={banner.order}>
+                        <BannerSlide banner={banner} />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
+            <div className="mt-4 flex justify-between">
+                <button
+                    type="button"
+                    aria-label="이전 배너 보기"
+                    className="swiper-button-prev cursor-pointer text-white"
+                />
+                <button
+                    type="button"
+                    aria-label="다음 배너 보기"
+                    className="swiper-button-next cursor-pointer text-white"
+                />
+            </div>
         </div>
-
-    </div>
-  );
+    );
 }
-
-export default MainBanner

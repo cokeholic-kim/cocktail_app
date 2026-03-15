@@ -6,6 +6,13 @@ export type DesignLabState = DataViewState;
 export type DemoCocktail = CocktailCardProps & { id: string };
 export type DemoIngredient = IngredientCardData & { id: string };
 
+export const designLabStateMessages: Record<DesignLabState, string> = {
+    ready: "준비됨",
+    loading: "로딩 중",
+    empty: "데이터 없음",
+    error: "오류 발생",
+};
+
 export const demoCocktails: DemoCocktail[] = [
     {
         id: "cocktail-afternoon-glow",

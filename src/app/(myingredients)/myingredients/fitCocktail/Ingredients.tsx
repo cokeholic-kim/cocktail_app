@@ -6,6 +6,7 @@ import { BASE_URL } from '@/app/(common)/common';
 import { CocktailFit } from '@/app/(common)/commonProps';
 import FitCocktailCard from './fitCocktailCard';
 import { isValidListItem, sanitizeText } from '@/app/(common)/securityValidation';
+import { logWarn } from '@/app/(common)/safeLogger';
 
 const NO_INPUT_ERROR = "선택한 재료가 없어 추천할 칵테일이 없습니다.";
 const NO_RESULT_MESSAGE = "조건에 맞는 칵테일을 찾지 못했습니다.";
@@ -25,7 +26,7 @@ const parseCheckedIngredients = (value: string | null): string[] => {
 
         return sanitized;
     } catch (error) {
-        console.error("Failed to parse checkedIngredients:", error);
+        logWarn("Failed to parse checkedIngredients:", error);
         return [];
     }
 };
@@ -42,7 +43,7 @@ async function sendIngredientsToAPI(ingredientNames: string[]) {
         });
 
         if (!response.ok) {
-            console.error("Error sending ingredients to API:", { status: response.status });
+            logWarn("Error sending ingredients to API:", { status: response.status });
             return { ok: false, error: `HTTP error! status: ${response.status}`, body: [] as CocktailFit[] };
         }
 
@@ -55,7 +56,7 @@ async function sendIngredientsToAPI(ingredientNames: string[]) {
         return { ok: true, error: null, body: responseData.body ?? [] };
     } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown fetch error";
-        console.error('Error sending ingredients to API:', error);
+        logWarn('Error sending ingredients to API:', error);
         return { ok: false, error: message, body: [] as CocktailFit[] };
     }
 };

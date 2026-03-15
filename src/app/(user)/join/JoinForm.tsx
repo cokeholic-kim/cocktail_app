@@ -2,6 +2,7 @@
 import { BASE_URL } from '@/app/(common)/common';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { logWarn } from '@/app/(common)/safeLogger';
 
 function JoinForm() {
     const [name, setName] = useState('');
@@ -98,7 +99,7 @@ function JoinForm() {
         alert(body)
         router.push('/');
       } catch (error) {
-        console.error('Error submitting form:', error);
+        logWarn('Error submitting form:', error);
       }
     };
 

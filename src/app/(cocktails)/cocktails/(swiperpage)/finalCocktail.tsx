@@ -3,6 +3,7 @@ import React from 'react'
 import { CocktailRequest } from './../AddCocktailSwiper';
 import { Ingredient } from '@/app/(ingredients)/ingredients/page';
 import { BASE_URL } from '@/app/(common)/common';
+import { logWarn } from '@/app/(common)/safeLogger';
 
 interface FinalCocktailProps{
     cocktailRequest: CocktailRequest;
@@ -114,10 +115,10 @@ function FinalCocktail({cocktailRequest,setCocktailRequest}:FinalCocktailProps) 
         if(response.ok) {
           alert(`${cocktailRequest.cocktailName} 이 저장되었습니다.`)
         } else{
-          console.error("Error submitting cocktail request:", response.status);
+          logWarn("Error submitting cocktail request:", response.status);
         }
       }catch (error){
-        console.error("Error submitting cocktail request:", error);
+        logWarn("Error submitting cocktail request:", error);
       }
     }else{
       alert('등록할 칵테일 정보를 모두 입력해 주세요')

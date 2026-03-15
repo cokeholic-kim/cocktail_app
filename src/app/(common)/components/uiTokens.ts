@@ -7,7 +7,7 @@ export const uiTokenStyles = {
     },
     search: {
         wrapper: "flex items-center px-6 py-5 w-full z-10 transition-all duration-500 bg-black/80",
-        input: "bg-gray-800 rounded-md text-white px-3 py-2 w-full focus:outline-none",
+        input: "bg-gray-800 rounded-md text-white px-3 py-2 w-full focus:outline-none min-h-[44px]",
     },
     button: {
         primary:
@@ -15,6 +15,6 @@ export const uiTokenStyles = {
     },
     layout: {
         section: "px-4 py-8 space-y-10",
-        content: "flex justify-start flex-wrap",
+        content: "flex justify-start flex-wrap gap-4",
     },
 };

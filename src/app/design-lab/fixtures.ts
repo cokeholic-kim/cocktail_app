@@ -6,6 +6,21 @@ export type DesignLabState = DataViewState;
 export type DemoCocktail = CocktailCardProps & { id: string };
 export type DemoIngredient = IngredientCardData & { id: string };
 
+export interface HomeBanner {
+    imagePath: string;
+    title: string;
+    src: string;
+    order: number;
+}
+
+export type DemoResult<T> = {
+    ok: boolean;
+    data?: {
+        body: T[];
+    };
+    error?: string | null;
+};
+
 export const designLabStateMessages: Record<DesignLabState, string> = {
     ready: "준비됨",
     loading: "로딩 중",
@@ -59,4 +74,27 @@ export const dataStateLabels: Record<DesignLabState, string> = {
     error: "Error",
 };
 
-export const sampleErrorMessage = "Backend is unavailable. Showing fallback preview data.";
+export const sampleErrorMessage =
+    "백엔드가 연결되지 않아 샘플 데이터로 미리보기를 표시합니다.";
+
+export const demoCocktailResponse: Record<DesignLabState, DemoResult<DemoCocktail>> = {
+    ready: { ok: true, data: { body: demoCocktails } },
+    loading: { ok: false, error: sampleErrorMessage },
+    empty: { ok: true, data: { body: [] } },
+    error: {
+        ok: false,
+        data: { body: demoCocktails },
+        error: sampleErrorMessage,
+    },
+};
+
+export const demoIngredientResponse: Record<DesignLabState, DemoResult<DemoIngredient>> = {
+    ready: { ok: true, data: { body: demoIngredients } },
+    loading: { ok: false, error: sampleErrorMessage },
+    empty: { ok: true, data: { body: [] } },
+    error: {
+        ok: false,
+        data: { body: demoIngredients },
+        error: "백엔드 연결 실패로 샘플 데이터를 사용합니다.",
+    },
+};

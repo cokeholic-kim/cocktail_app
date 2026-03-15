@@ -4,7 +4,12 @@ import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
-import { DataStateNotice, DataViewState } from "@/app/(common)/components/dataStateNotice";
+import {
+    DataStateNotice,
+    DataViewState,
+    normalizeErrorMessage,
+    resolveDataState,
+} from "@/app/(common)/components/dataStateNotice";
 
 type ApiEnvelope<T> = {
     body: T;
@@ -12,7 +17,7 @@ type ApiEnvelope<T> = {
 
 type HomePageState = Exclude<DataViewState, "loading">;
 
-export interface banner {
+export interface HomeBanner {
     imagePath: string;
     title: string;
     src: string;
@@ -27,7 +32,7 @@ const fallbackCocktails: CocktailCardProps[] = [
     },
 ];
 
-const fallbackBanners: banner[] = [
+const fallbackBanners: HomeBanner[] = [
     {
         imagePath: "/assets/icon-384x384.png",
         title: "Cocktail App",
@@ -43,24 +48,19 @@ async function getCocktail() {
 }
 
 async function getBanner() {
-    return fetchWithCookie<ApiEnvelope<banner[]>>(`${BASE_URL}/banner/getAllBanner`, AUTH_COOKIE_NAME, {
+    return fetchWithCookie<ApiEnvelope<HomeBanner[]>>(`${BASE_URL}/banner/getAllBanner`, AUTH_COOKIE_NAME, {
         fallback: { body: [] },
     });
-}
-
-function getErrorMessage(...errors: Array<string | null | undefined>) {
-    const visibleErrors = errors.filter((error): error is string => Boolean(error));
-    return visibleErrors.length > 0 ? visibleErrors.join(" | ") : undefined;
 }
 
 export default async function Home() {
     const [cocktails, bannersData] = await Promise.all([getCocktail(), getBanner()]);
     const cocktailsData: CocktailCardProps[] = cocktails.ok ? cocktails.data?.body ?? [] : [];
     const banners = bannersData.ok ? bannersData.data?.body ?? [] : [];
-    const bannerErrorMessage = bannersData.ok ? undefined : bannersData.error ?? undefined;
-    const cocktailErrorMessage = cocktails.ok ? undefined : cocktails.error ?? undefined;
-    const bannerState: HomePageState = !bannersData.ok ? "error" : banners.length > 0 ? "ready" : "empty";
-    const cocktailState: HomePageState = !cocktails.ok ? "error" : cocktailsData.length > 0 ? "ready" : "empty";
+    const bannerErrorMessage = normalizeErrorMessage([bannersData.error]);
+    const cocktailErrorMessage = normalizeErrorMessage([cocktails.error]);
+    const bannerState: HomePageState = resolveDataState(bannersData.ok, banners.length > 0);
+    const cocktailState: HomePageState = resolveDataState(cocktails.ok, cocktailsData.length > 0);
 
     return (
         <>
@@ -68,26 +68,14 @@ export default async function Home() {
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <DataStateNotice state={cocktailState} pageLabel="Home Cocktail" message={cocktailErrorMessage} />
             <div className="flex justify-start flex-wrap">
-                {cocktailsData.length > 0
-                    ? cocktailsData.map((cocktail: CocktailCardProps, index: number) => {
-                        return (
-                            <CocktailCard
-                                key={index}
-                                imagePath={cocktail.imagePath}
-                                cocktailName={cocktail.cocktailName}
-                                description={cocktail.description}
-                            />
-                        );
-                    })
-                    : fallbackCocktails.map((cocktail: CocktailCardProps, index: number) => (
-                        <CocktailCard
-                            key={index}
-                            imagePath={cocktail.imagePath}
-                            cocktailName={cocktail.cocktailName}
-                            description={cocktail.description}
-                        />
-                    ))
-                }
+                {(cocktailsData.length > 0 ? cocktailsData : fallbackCocktails).map((cocktail, index) => (
+                    <CocktailCard
+                        key={index}
+                        imagePath={cocktail.imagePath}
+                        cocktailName={cocktail.cocktailName}
+                        description={cocktail.description}
+                    />
+                ))}
             </div>
         </>
     );

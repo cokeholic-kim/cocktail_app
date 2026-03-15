@@ -6,6 +6,18 @@ interface DataStateNoticeProps {
     message?: string;
 }
 
+export function resolveDataState(hasResponse: boolean, hasData: boolean) {
+    if (!hasResponse) {
+        return "error";
+    }
+    return hasData ? "ready" : "empty";
+}
+
+export function normalizeErrorMessage(errors: Array<string | null | undefined>) {
+    const visibleErrors = errors.filter((error): error is string => Boolean(error));
+    return visibleErrors.length > 0 ? visibleErrors.join(" | ") : undefined;
+}
+
 function getStatusClassName(state: DataViewState) {
     if (state === "ready") {
         return "border-transparent bg-transparent p-0";
@@ -41,7 +53,9 @@ export function DataStateNotice({ state, pageLabel, message }: DataStateNoticePr
 
     return (
         <div className={`mx-4 mt-4 rounded border p-3 text-sm ${getStatusClassName(state)}`}>
-            <p className="font-semibold">{statusText}</p>
+            <p className="font-semibold" role="status" aria-live="polite">
+                {statusText}
+            </p>
             <p className="mt-1 text-xs opacity-80">Page state changed: {state}.</p>
         </div>
     );

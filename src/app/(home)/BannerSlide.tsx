@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { HomeBanner } from "@/app/design-lab/page";
+import type { HomeBanner } from "@/app/design-lab/fixtures";
 import { uiTokenStyles } from "@/app/(common)/components/uiTokens";
 
 interface BannerSlideProps {

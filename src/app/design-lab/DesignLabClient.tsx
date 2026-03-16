@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useMemo, useState } from "react";
 import SearchBox from "@/app/common/components/searchBox";
@@ -36,7 +36,7 @@ function buildDemoView<T>(
     state: DesignLabState,
     items: T[],
     sourceItemCount: number,
-    sourceEmptyMessage: string,
+    fallbackMessage: string,
     searchEmptyMessage: string
 ): DemoViewState<T> {
     if (state === "loading") {
@@ -44,14 +44,14 @@ function buildDemoView<T>(
     }
 
     if (state === "error") {
-        return { state: "error", items, message: sourceEmptyMessage };
+        return { state: "error", items, message: fallbackMessage };
     }
 
     if (!items.length) {
         return {
             state: "empty",
             items: [],
-            message: sourceItemCount > 0 ? searchEmptyMessage : sourceEmptyMessage,
+            message: sourceItemCount > 0 ? searchEmptyMessage : fallbackMessage,
         };
     }
 
@@ -86,7 +86,9 @@ function StateSectionNotice({
 
     return (
         <p className="mt-2 w-full text-sm text-gray-600" role="status" aria-live="polite">
-            {`${label}: ${designLabStateMessages[state]} - ${text}`}
+            {text
+                ? `${label}: ${designLabStateMessages[state]} - ${text}`
+                : `${label}: ${designLabStateMessages[state]}`}
         </p>
     );
 }
@@ -135,14 +137,18 @@ export default function DesignLabClient() {
         [ingredientSource, ingredientSearch]
     );
 
+    const fallbackMessage = "샘플 데이터 조회 실패. 기본 상태로 전환합니다.";
+    const cocktailSearchMessage = cocktailSearch.trim() ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다.";
+    const ingredientSearchMessage = ingredientSearch.trim() ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다.";
+
     const cocktailView = useMemo(
         () =>
             buildDemoView(
                 cocktailState,
                 filteredCocktails,
                 cocktailSource.data?.body?.length ?? 0,
-                cocktailSource.error || "샘플 데이터 조회 실패. 기본 상태로 전환합니다.",
-                cocktailSearch.length > 0 ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다."
+                cocktailSource.error || fallbackMessage,
+                cocktailSearchMessage
             ),
         [cocktailState, filteredCocktails, cocktailSearch, cocktailSource]
     );
@@ -152,8 +158,8 @@ export default function DesignLabClient() {
                 ingredientState,
                 filteredIngredients,
                 ingredientSource.data?.body?.length ?? 0,
-                ingredientSource.error || "샘플 데이터 조회 실패. 기본 상태로 전환합니다.",
-                ingredientSearch.length > 0 ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다."
+                ingredientSource.error || fallbackMessage,
+                ingredientSearchMessage
             ),
         [ingredientState, filteredIngredients, ingredientSearch, ingredientSource]
     );
@@ -161,19 +167,19 @@ export default function DesignLabClient() {
     return (
         <section className={uiTokenStyles.layout.section}>
             <section className="rounded-xl border bg-white p-4 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold">UI ?곹깭 誘몃━蹂닿린 (諛깆뿏??誘몄뿰寃?紐⑤뱶)</h2>
+                <h2 className="mb-4 text-xl font-semibold">UI 컴포넌트 동작 확인</h2>
                 <button
                     type="button"
                     onClick={() => setIsLogin((prev) => !prev)}
                     className="rounded bg-slate-900 px-4 py-2 text-sm text-white"
                 >
-                    Login state: {isLogin ? "ON" : "OFF"} (?대┃ ?좉?)
+                    Login state: {isLogin ? "ON" : "OFF"} (임시 토글)
                 </button>
             </section>
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">CocktailCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">諛깆뿏???놁씠 移대뱶 而댄룷?뚰듃瑜?誘몃━ ?뺤씤?⑸땲??</p>
+                <p className="mb-4 text-sm text-gray-500">카드에서 실제 사용한 샘플 데이터 기반으로 렌더링을 확인하세요.</p>
                 <SearchBox placeHolder="CocktailCard 검색" setSearchValue={setCocktailSearch} />
                 <StateButtons activeState={cocktailState} onChange={setCocktailState} />
                 <div className={uiTokenStyles.layout.content}>
@@ -196,7 +202,7 @@ export default function DesignLabClient() {
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">IngredientCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">諛깆뿏???놁씠 ?щ즺 移대뱶 而댄룷?뚰듃瑜?誘몃━ ?뺤씤?⑸땲??</p>
+                <p className="mb-4 text-sm text-gray-500">재료 카드도 동일한 방식으로 데이터 조회 상태를 확인하세요.</p>
                 <SearchBox placeHolder="IngredientCard 검색" setSearchValue={setIngredientSearch} />
                 <StateButtons activeState={ingredientState} onChange={setIngredientState} />
                 <div className={uiTokenStyles.layout.content}>

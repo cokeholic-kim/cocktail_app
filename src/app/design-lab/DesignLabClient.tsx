@@ -37,6 +37,10 @@ function buildDemoView<T>(state: DesignLabState, items: T[], isEmptyMessage: str
         return { state: "loading", items: [], message: "" };
     }
 
+    if (state === "error") {
+        return { state: "error", items, message: isEmptyMessage };
+    }
+
     if (!items.length) {
         return { state: "empty", items: [], message: isEmptyMessage };
     }

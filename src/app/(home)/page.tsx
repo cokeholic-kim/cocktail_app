@@ -64,7 +64,7 @@ export default async function Home() {
     const cocktailState: HomePageState = resolveDataState(cocktails.ok, cocktailsData.length > 0);
 
     return (
-        <main className={uiTokenStyles.layout.section}>
+        <section className={uiTokenStyles.layout.section}>
             <DataStateNotice state={bannerState} pageLabel="Home Banner" message={bannerErrorMessage} />
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <DataStateNotice state={cocktailState} pageLabel="Home Cocktail" message={cocktailErrorMessage} />
@@ -78,6 +78,6 @@ export default async function Home() {
                     />
                 ))}
             </div>
-        </main>
+        </section>
     );
 }

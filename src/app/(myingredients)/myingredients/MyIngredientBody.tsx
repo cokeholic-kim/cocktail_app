@@ -26,9 +26,11 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
     const [checkedIngredients, setCheckedIngredients] = useState<IngredientChecked[]>([]);
 
     useEffect(() => {
-        if (swiperRef.current) {
-            swiperRef.current.slideTo(checkedIngredients.length - 1);
+        if (!swiperRef.current || checkedIngredients.length === 0) {
+            return;
         }
+
+        swiperRef.current.slideTo(checkedIngredients.length - 1);
     }, [checkedIngredients]);
 
     const handleCheck = (ingredient: IngredientChecked) => {
@@ -111,6 +113,7 @@ function MyIngredientBody({ ingredients }: { ingredients: Ingredient[] }) {
 
             <nav className={`sticky top-0 z-10 bg-black flex justify-between items-center px-4 py-3 w-full`}>
                 <input
+                    aria-label="재료 검색"
                     className="bg-gray-800 rounded-md text-white px-3 py-3 w-full focus:outline-none"
                     type="text"
                     placeholder="재료 검색"

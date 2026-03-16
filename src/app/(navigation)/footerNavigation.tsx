@@ -22,8 +22,8 @@ export function FooterNavigation() {
     }, [path]);
 
     return (
-        <footer className="mt-2 fixed inset-x-0 bottom-0 w-full z-10">
-            <div className="max-w-6xl mx-auto h-20 bg-gray-100 border rounded-tl-2xl rounded-tr-2xl px-4 flex justify-between items-center pb-[env(safe-area-inset-bottom)]">
+        <nav aria-label="하단 내비게이션" className="fixed inset-x-0 bottom-0 w-full z-10">
+            <div className="max-w-6xl mx-auto min-h-20 bg-gray-100 border rounded-tl-2xl rounded-tr-2xl px-4 flex justify-between items-center pt-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
                 <Link
                     href={"/"}
                     aria-current={activeTab === "home" ? "page" : undefined}
@@ -61,6 +61,6 @@ export function FooterNavigation() {
                     <span>My Ingredients</span>
                 </Link>
             </div>
-        </footer>
+        </nav>
     );
 }

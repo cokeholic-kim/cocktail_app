@@ -95,6 +95,6 @@ export const demoIngredientResponse: Record<DesignLabState, DemoResult<DemoIngre
     error: {
         ok: false,
         data: { body: demoIngredients },
-        error: "백엔드 연결 실패로 샘플 데이터를 사용합니다.",
+        error: sampleErrorMessage,
     },
 };

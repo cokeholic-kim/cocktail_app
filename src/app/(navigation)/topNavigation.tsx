@@ -74,6 +74,7 @@ export function TopNavigation() {
             }
 
             setIsLogin(false);
+            setMenuToggle(false);
         } catch (error) {
             logWarn("Logout API request failed", error);
         }

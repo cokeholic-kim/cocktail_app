@@ -32,13 +32,21 @@ function filterBySearch<T, K extends keyof T>(items: T[], keyword: string, field
     );
 }
 
-function buildDemoView<T>(state: DesignLabState, items: T[], isEmptyMessage: string): DemoViewState<T> {
+function buildDemoView<T>(
+    state: DesignLabState,
+    items: T[],
+    fallbackMessage: string
+): DemoViewState<T> {
     if (state === "loading") {
         return { state: "loading", items: [], message: "" };
     }
 
+    if (state === "error") {
+        return { state: "error", items, message: fallbackMessage };
+    }
+
     if (!items.length) {
-        return { state: "empty", items: [], message: isEmptyMessage };
+        return { state: "empty", items: [], message: fallbackMessage };
     }
 
     return { state, items, message: "" };

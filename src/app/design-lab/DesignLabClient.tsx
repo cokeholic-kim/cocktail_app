@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo, useState } from "react";
 import SearchBox from "@/app/common/components/searchBox";
@@ -35,18 +35,24 @@ function filterBySearch<T, K extends keyof T>(items: T[], keyword: string, field
 function buildDemoView<T>(
     state: DesignLabState,
     items: T[],
-    fallbackMessage: string
+    sourceItemCount: number,
+    sourceEmptyMessage: string,
+    searchEmptyMessage: string
 ): DemoViewState<T> {
     if (state === "loading") {
         return { state: "loading", items: [], message: "" };
     }
 
     if (state === "error") {
-        return { state: "error", items, message: fallbackMessage };
+        return { state: "error", items, message: sourceEmptyMessage };
     }
 
     if (!items.length) {
-        return { state: "empty", items: [], message: fallbackMessage };
+        return {
+            state: "empty",
+            items: [],
+            message: sourceItemCount > 0 ? searchEmptyMessage : sourceEmptyMessage,
+        };
     }
 
     return { state, items, message: "" };
@@ -134,37 +140,41 @@ export default function DesignLabClient() {
             buildDemoView(
                 cocktailState,
                 filteredCocktails,
-                cocktailSource.error || "필요한 샘플 데이터가 없어 카드가 비어 있습니다."
+                cocktailSource.data?.body?.length ?? 0,
+                cocktailSource.error || "샘플 데이터 조회 실패. 기본 상태로 전환합니다.",
+                cocktailSearch.length > 0 ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다."
             ),
-        [cocktailState, filteredCocktails, cocktailSource]
+        [cocktailState, filteredCocktails, cocktailSearch, cocktailSource]
     );
     const ingredientView = useMemo(
         () =>
             buildDemoView(
                 ingredientState,
                 filteredIngredients,
-                ingredientSource.error || "필요한 샘플 데이터가 없어 항목이 비어 있습니다."
+                ingredientSource.data?.body?.length ?? 0,
+                ingredientSource.error || "샘플 데이터 조회 실패. 기본 상태로 전환합니다.",
+                ingredientSearch.length > 0 ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다."
             ),
-        [ingredientState, filteredIngredients, ingredientSource]
+        [ingredientState, filteredIngredients, ingredientSearch, ingredientSource]
     );
 
     return (
-        <main className={uiTokenStyles.layout.section}>
+        <section className={uiTokenStyles.layout.section}>
             <section className="rounded-xl border bg-white p-4 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold">UI 상태 미리보기 (백엔드 미연결 모드)</h2>
+                <h2 className="mb-4 text-xl font-semibold">UI ?곹깭 誘몃━蹂닿린 (諛깆뿏??誘몄뿰寃?紐⑤뱶)</h2>
                 <button
                     type="button"
                     onClick={() => setIsLogin((prev) => !prev)}
                     className="rounded bg-slate-900 px-4 py-2 text-sm text-white"
                 >
-                    Login state: {isLogin ? "ON" : "OFF"} (클릭 토글)
+                    Login state: {isLogin ? "ON" : "OFF"} (?대┃ ?좉?)
                 </button>
             </section>
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">CocktailCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">백엔드 없이 카드 컴포넌트를 미리 확인합니다.</p>
-                <SearchBox placeHolder="칵테일 검색" setSearchValue={setCocktailSearch} />
+                <p className="mb-4 text-sm text-gray-500">諛깆뿏???놁씠 移대뱶 而댄룷?뚰듃瑜?誘몃━ ?뺤씤?⑸땲??</p>
+                <SearchBox placeHolder="CocktailCard 검색" setSearchValue={setCocktailSearch} />
                 <StateButtons activeState={cocktailState} onChange={setCocktailState} />
                 <div className={uiTokenStyles.layout.content}>
                     {cocktailView.state === "loading" && <SkeletonCard count={2} />}
@@ -186,8 +196,8 @@ export default function DesignLabClient() {
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">IngredientCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">백엔드 없이 재료 카드 컴포넌트를 미리 확인합니다.</p>
-                <SearchBox placeHolder="재료 검색" setSearchValue={setIngredientSearch} />
+                <p className="mb-4 text-sm text-gray-500">諛깆뿏???놁씠 ?щ즺 移대뱶 而댄룷?뚰듃瑜?誘몃━ ?뺤씤?⑸땲??</p>
+                <SearchBox placeHolder="IngredientCard 검색" setSearchValue={setIngredientSearch} />
                 <StateButtons activeState={ingredientState} onChange={setIngredientState} />
                 <div className={uiTokenStyles.layout.content}>
                     {ingredientView.state === "loading" && <SkeletonCard count={3} />}
@@ -206,9 +216,9 @@ export default function DesignLabClient() {
                     />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
-                    New ingredient action: {newIngredientRequested ? "요청됨" : "대기"}
+                    New ingredient action: {newIngredientRequested ? "요청됨" : "요청 안 함"}
                 </p>
             </section>
-        </main>
+        </section>
     );
 }

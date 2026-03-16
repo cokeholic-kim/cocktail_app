@@ -44,7 +44,7 @@ function buildDemoView<T>(
     }
 
     if (state === "error") {
-        return { state: "error", items, message: sourceEmptyMessage };
+        return { state: "error", items, message: isEmptyMessage };
     }
 
     if (!items.length) {

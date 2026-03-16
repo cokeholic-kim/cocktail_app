@@ -161,19 +161,19 @@ export default function DesignLabClient() {
     return (
         <section className={uiTokenStyles.layout.section}>
             <section className="rounded-xl border bg-white p-4 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold">UI ?곹깭 誘몃━蹂닿린 (諛깆뿏??誘몄뿰寃?紐⑤뱶)</h2>
+                <h2 className="mb-4 text-xl font-semibold">UI 컴포넌트 상태 토글(디자인랩 샘플)</h2>
                 <button
                     type="button"
                     onClick={() => setIsLogin((prev) => !prev)}
                     className="rounded bg-slate-900 px-4 py-2 text-sm text-white"
                 >
-                    Login state: {isLogin ? "ON" : "OFF"} (?대┃ ?좉?)
+                    Login state: {isLogin ? "ON" : "OFF"} (클릭 토글)
                 </button>
             </section>
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">CocktailCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">諛깆뿏???놁씠 移대뱶 而댄룷?뚰듃瑜?誘몃━ ?뺤씤?⑸땲??</p>
+                <p className="mb-4 text-sm text-gray-500">CocktailCard 샘플의 렌더링/상태/검색 동작을 확인합니다.</p>
                 <SearchBox placeHolder="CocktailCard 검색" setSearchValue={setCocktailSearch} />
                 <StateButtons activeState={cocktailState} onChange={setCocktailState} />
                 <div className={uiTokenStyles.layout.content}>
@@ -196,7 +196,7 @@ export default function DesignLabClient() {
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">IngredientCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">諛깆뿏???놁씠 ?щ즺 移대뱶 而댄룷?뚰듃瑜?誘몃━ ?뺤씤?⑸땲??</p>
+                <p className="mb-4 text-sm text-gray-500">IngredientCard 샘플의 렌더링/상태/검색 동작을 확인합니다.</p>
                 <SearchBox placeHolder="IngredientCard 검색" setSearchValue={setIngredientSearch} />
                 <StateButtons activeState={ingredientState} onChange={setIngredientState} />
                 <div className={uiTokenStyles.layout.content}>

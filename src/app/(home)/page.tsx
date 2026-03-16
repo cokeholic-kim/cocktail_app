@@ -4,6 +4,7 @@ import CocktailCard from "./cocktailCard";
 import MainBanner from "./MainBanner";
 import { fetchWithCookie } from "@/app/(common)/fetchUtils";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
+import { uiTokenStyles } from "@/app/(common)/components/uiTokens";
 import {
     DataStateNotice,
     DataViewState,
@@ -63,11 +64,11 @@ export default async function Home() {
     const cocktailState: HomePageState = resolveDataState(cocktails.ok, cocktailsData.length > 0);
 
     return (
-        <>
+        <main className={uiTokenStyles.layout.section}>
             <DataStateNotice state={bannerState} pageLabel="Home Banner" message={bannerErrorMessage} />
             <MainBanner banners={banners.length > 0 ? banners : fallbackBanners} />
             <DataStateNotice state={cocktailState} pageLabel="Home Cocktail" message={cocktailErrorMessage} />
-            <div className="flex justify-start flex-wrap">
+            <div className={uiTokenStyles.layout.content}>
                 {(cocktailsData.length > 0 ? cocktailsData : fallbackCocktails).map((cocktail, index) => (
                     <CocktailCard
                         key={index}
@@ -77,6 +78,6 @@ export default async function Home() {
                     />
                 ))}
             </div>
-        </>
+        </main>
     );
 }

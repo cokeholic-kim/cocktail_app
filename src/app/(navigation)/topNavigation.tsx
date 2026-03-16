@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -82,36 +82,28 @@ export function TopNavigation() {
     return (
         <nav className="bg-gray-100">
             <div className="max-w-6xl mx-auto px-4">
-                <div className="flex justify-between">
-                    <div className="flex pace-x-4">
-                        <div>
-                            <Link
-                                href={"/"}
-                                className="flex items-center py-5 px-2 text-gray-700"
-                                aria-label="홈으로 이동"
-                            >
-                                <div className="w-10 md:w-20 cursor-pointer overflow-hidden rounded-full mr-3">
-                                    <Image
-                                        src="/assets/icon-384x384.png"
-                                        alt="logo"
-                                        width={100}
-                                        height={100}
-                                        className="object-contain w-full"
-                                    />
-                                </div>
-                            </Link>
-                        </div>
-                        <div className="hidden md:flex items-center space-x-1">
-                        </div>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                        <Link href={"/"} className="flex items-center py-3 text-gray-700" aria-label="Home">
+                            <div className="w-10 h-10 md:w-20 md:h-20 cursor-pointer overflow-hidden rounded-full mr-3">
+                                <Image
+                                    src="/assets/icon-384x384.png"
+                                    alt="logo"
+                                    width={100}
+                                    height={100}
+                                    className="object-contain w-full h-full"
+                                />
+                            </div>
+                        </Link>
                     </div>
                     {!isLogin ? (
                         <div className="hidden md:flex items-center space-x-1">
-                            <Link href={"/login"} className="py-5 px-3">
+                            <Link href={"/login"} className="inline-flex items-center min-h-[44px] px-3">
                                 Login
                             </Link>
                             <Link
                                 href={"/join"}
-                                className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
+                                className="inline-flex items-center min-h-[44px] px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
                             >
                                 Signup
                             </Link>
@@ -120,16 +112,17 @@ export function TopNavigation() {
                         <div className="hidden md:flex items-center space-x-1">
                             <button
                                 type="button"
-                                className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
+                                className="inline-flex items-center min-h-[44px] px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
                                 onClick={handleLogout}
                             >
-                                logout
+                                Logout
                             </button>
                         </div>
                     )}
                     <div className="md:hidden flex items-center text-black">
                         <button
                             type="button"
+                            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center"
                             aria-expanded={menuToggle}
                             aria-label={menuToggle ? "메뉴 닫기" : "메뉴 열기"}
                             onClick={() => setMenuToggle(!menuToggle)}
@@ -174,12 +167,16 @@ export function TopNavigation() {
                     <>
                         <Link
                             href={"/login"}
-                            className="block py-2 px-4 text-sm hover:bg-gray-200"
+                            className="block py-3 px-4 text-sm hover:bg-gray-200 min-h-[44px]"
                             onClick={() => setMenuToggle(false)}
                         >
                             Login
                         </Link>
-                        <Link href={"/join"} className="block py-2 px-4 text-sm hover:bg-gray-200" onClick={() => setMenuToggle(false)}>
+                        <Link
+                            href={"/join"}
+                            className="block py-3 px-4 text-sm hover:bg-gray-200 min-h-[44px]"
+                            onClick={() => setMenuToggle(false)}
+                        >
                             Join
                         </Link>
                     </>
@@ -187,7 +184,7 @@ export function TopNavigation() {
                     <button
                         type="button"
                         onClick={handleLogout}
-                        className="block py-2 px-4 text-sm hover:bg-gray-200"
+                        className="block py-3 px-4 text-sm hover:bg-gray-200 min-h-[44px]"
                     >
                         Logout
                     </button>

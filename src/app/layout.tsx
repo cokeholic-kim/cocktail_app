@@ -29,12 +29,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} overflow-x-hidden`}>
         <LoginContextProvider>
           <header>
             <TopNavigation />
           </header>
-          <main className="max-w-6xl my-0 mx-auto min-h-screen pb-20">
+          <main className="max-w-6xl my-0 mx-auto w-full min-h-screen pb-20 px-4 sm:px-6">
             {children}
           </main>
           <footer>

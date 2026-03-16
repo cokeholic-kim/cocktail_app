@@ -9,7 +9,7 @@ import { Navigation, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 
-import type { HomeBanner } from "@/app/design-lab/page";
+import type { HomeBanner } from "@/app/design-lab/fixtures";
 import BannerSlide from "./BannerSlide";
 
 interface MainBannerProps {

@@ -22,10 +22,24 @@ export type DemoResult<T> = {
 };
 
 export const designLabStateMessages: Record<DesignLabState, string> = {
-    ready: "준비됨",
-    loading: "로딩 중",
-    empty: "데이터 없음",
-    error: "오류 발생",
+    ready: "기본 데이터가 정상입니다.",
+    loading: "로딩 중입니다.",
+    empty: "데이터가 없습니다.",
+    error: "데이터 조회 실패입니다.",
+};
+
+export const demoStateStories = ["ready", "loading", "error"] as const satisfies ReadonlyArray<DesignLabState>;
+
+export const designLabStateLabels: Record<DesignLabState, string> = {
+    ready: "기본",
+    loading: "로딩",
+    empty: "빈 데이터",
+    error: "에러",
+};
+
+export const designLabSearchStateMessages = {
+    searchResultEmpty: "검색 결과가 없습니다.",
+    sourceEmpty: "샘플 데이터가 없습니다.",
 };
 
 export const demoCocktails: DemoCocktail[] = [
@@ -74,8 +88,7 @@ export const dataStateLabels: Record<DesignLabState, string> = {
     error: "Error",
 };
 
-export const sampleErrorMessage =
-    "백엔드가 연결되지 않아 샘플 데이터로 미리보기를 표시합니다.";
+export const sampleErrorMessage = "샘플 데이터 조회 실패. 기본 상태로 전환합니다.";
 
 export const demoCocktailResponse: Record<DesignLabState, DemoResult<DemoCocktail>> = {
     ready: { ok: true, data: { body: demoCocktails } },

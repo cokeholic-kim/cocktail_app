@@ -6,7 +6,8 @@ import DesignLabClient from "./DesignLabClient";
 
 export const metadata: Metadata = {
     title: "Design Lab",
-    description: "디자인 랩은 API 없이도 UI 컴포넌트를 미리 확인할 수 있는 테스트 페이지입니다.",
+    description:
+        "디자인 랩은 API 데이터가 없어도 컴포넌트의 기본/로딩/에러/빈 상태를 UI로 확인하고 검증하는 내부 페이지입니다.",
 };
 
 export default function DesignLabPage() {

@@ -28,7 +28,7 @@ export const designLabStateMessages: Record<DesignLabState, string> = {
     error: "데이터 조회 실패입니다.",
 };
 
-export const demoStateStories = ["ready", "loading", "error"] as const satisfies ReadonlyArray<DesignLabState>;
+export const demoStateStories = ["ready", "loading", "empty", "error"] as const satisfies ReadonlyArray<DesignLabState>;
 
 export const designLabStateLabels: Record<DesignLabState, string> = {
     ready: "기본",

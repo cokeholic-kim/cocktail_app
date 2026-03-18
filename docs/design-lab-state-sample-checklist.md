@@ -1,6 +1,6 @@
 ## [체크리스트] 디자인랩 상태 샘플 점검
 
-- [ ] `design-lab` 페이지 진입 시 디버그 UI 플래그(false) 접근 차단 동작 확인
+- [ ] `design-lab` 페이지 진입 시 디버그 UI 노출 플래그(false) 접근 차단 동작 확인
 - [ ] Cocktail/Ingredient 컴포넌트 상태 버튼에서 `ready/loading/empty/error` 조합으로 전환 가능
 - [ ] `loading` 상태에서 스켈레톤 노출 확인
 - [ ] `error` 상태에서 에러 메시지 노출 및 fallback 동작 확인

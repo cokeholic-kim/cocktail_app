@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+
 import SearchBox from "@/app/common/components/searchBox";
 import CocktailCard from "@/app/(home)/cocktailCard";
 import IngredientCard from "@/app/(ingredients)/ingredients/IngredientCard";
@@ -10,10 +11,13 @@ import {
     dataStateLabels,
     demoCocktailResponse,
     demoIngredientResponse,
+    demoStateStories,
+    designLabSearchStateMessages,
+    designLabStateLabels,
     designLabStateMessages,
     DesignLabState,
-    DemoIngredient,
     DemoCocktail,
+    DemoIngredient,
 } from "@/app/design-lab/fixtures";
 
 type DemoViewState<T> = {
@@ -22,14 +26,13 @@ type DemoViewState<T> = {
     message: string;
 };
 
-function filterBySearch<T, K extends keyof T>(items: T[], keyword: string, field: K) {
+function filterBySearch<T, K extends keyof T>(items: T[], keyword: string, field: K): T[] {
     if (!keyword) {
         return items;
     }
 
-    return items.filter((item) =>
-        String(item[field] ?? "").toLowerCase().includes(keyword.toLowerCase())
-    );
+    const lowerKeyword = keyword.trim().toLowerCase();
+    return items.filter((item) => String(item[field] ?? "").toLowerCase().includes(lowerKeyword));
 }
 
 function buildDemoView<T>(
@@ -56,6 +59,14 @@ function buildDemoView<T>(
     }
 
     return { state, items, message: "" };
+}
+
+function getNoticeText(state: DesignLabState, label: string, text: string) {
+    if (!text) {
+        return `${label}: ${designLabStateMessages[state]}`;
+    }
+
+    return `${label}: ${designLabStateMessages[state]} - ${text}`;
 }
 
 function SkeletonCard({ count }: { count: number }) {
@@ -86,29 +97,46 @@ function StateSectionNotice({
 
     return (
         <p className="mt-2 w-full text-sm text-gray-600" role="status" aria-live="polite">
-            {text
-                ? `${label}: ${designLabStateMessages[state]} - ${text}`
-                : `${label}: ${designLabStateMessages[state]}`}
+            {getNoticeText(state, label, text)}
         </p>
     );
 }
 
-function StateButtons({ activeState, onChange }: { activeState: DesignLabState; onChange: (state: DesignLabState) => void }) {
+function StateButtons({
+    activeState,
+    onChange,
+    states,
+    ariaPrefix,
+}: {
+    activeState: DesignLabState;
+    states: readonly DesignLabState[];
+    onChange: (state: DesignLabState) => void;
+    ariaPrefix: string;
+}) {
     return (
         <div className="mt-2 mb-4 flex flex-wrap gap-2">
-            {(Object.entries(dataStateLabels) as [DesignLabState, string][]).map(([state, label]) => (
-                <button
-                    key={state}
-                    type="button"
-                    onClick={() => onChange(state)}
-                    aria-pressed={activeState === state}
-                    className={`rounded px-3 py-1 text-sm ${activeState === state ? "bg-black text-white" : "bg-gray-200"}`}
-                >
-                    {label}
-                </button>
-            ))}
+            {states.map((state) => {
+                const label = designLabStateLabels[state];
+
+                return (
+                    <button
+                        key={state}
+                        type="button"
+                        onClick={() => onChange(state)}
+                        aria-pressed={activeState === state}
+                        aria-label={`${ariaPrefix} 상태 ${label}`}
+                        className={`rounded px-3 py-1 text-sm ${activeState === state ? "bg-black text-white" : "bg-gray-200"}`}
+                    >
+                        {label}
+                    </button>
+                );
+            })}
         </div>
     );
+}
+
+function buildSearchMessage(keyword: string, messageSet: typeof designLabSearchStateMessages): string {
+    return keyword.trim() ? messageSet.searchResultEmpty : messageSet.sourceEmpty;
 }
 
 export default function DesignLabClient() {
@@ -123,23 +151,17 @@ export default function DesignLabClient() {
     const ingredientSource = demoIngredientResponse[ingredientState];
 
     const filteredCocktails = useMemo(
-        () =>
-            filterBySearch(cocktailSource.data?.body ?? [], cocktailSearch, "cocktailName" as keyof DemoCocktail),
+        () => filterBySearch(cocktailSource.data?.body ?? [], cocktailSearch, "cocktailName"),
         [cocktailSource, cocktailSearch]
     );
     const filteredIngredients = useMemo(
-        () =>
-            filterBySearch(
-                ingredientSource.data?.body ?? [],
-                ingredientSearch,
-                "ingredientName" as keyof DemoIngredient
-            ),
+        () => filterBySearch(ingredientSource.data?.body ?? [], ingredientSearch, "ingredientName"),
         [ingredientSource, ingredientSearch]
     );
 
     const fallbackMessage = "샘플 데이터 조회 실패. 기본 상태로 전환합니다.";
-    const cocktailSearchMessage = cocktailSearch.trim() ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다.";
-    const ingredientSearchMessage = ingredientSearch.trim() ? "검색 결과가 없습니다." : "샘플 데이터가 없습니다.";
+    const cocktailSearchMessage = buildSearchMessage(cocktailSearch, designLabSearchStateMessages);
+    const ingredientSearchMessage = buildSearchMessage(ingredientSearch, designLabSearchStateMessages);
 
     const cocktailView = useMemo(
         () =>
@@ -150,7 +172,7 @@ export default function DesignLabClient() {
                 cocktailSource.error || fallbackMessage,
                 cocktailSearchMessage
             ),
-        [cocktailState, filteredCocktails, cocktailSearch, cocktailSource]
+        [cocktailState, filteredCocktails, cocktailSource, cocktailSearchMessage]
     );
     const ingredientView = useMemo(
         () =>
@@ -161,27 +183,37 @@ export default function DesignLabClient() {
                 ingredientSource.error || fallbackMessage,
                 ingredientSearchMessage
             ),
-        [ingredientState, filteredIngredients, ingredientSearch, ingredientSource]
+        [ingredientState, filteredIngredients, ingredientSource, ingredientSearchMessage]
     );
 
     return (
         <section className={uiTokenStyles.layout.section}>
             <section className="rounded-xl border bg-white p-4 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold">UI 컴포넌트 동작 확인</h2>
+                <h2 className="mb-4 text-xl font-semibold">디자인 실험실 상태 샘플</h2>
+                <p className="mb-4 text-sm text-gray-500">
+                    CocktailCard/IngredientCard 컴포넌트의 기본, 로딩, 에러 상태를 API 없이 확인합니다.
+                </p>
                 <button
                     type="button"
                     onClick={() => setIsLogin((prev) => !prev)}
                     className="rounded bg-slate-900 px-4 py-2 text-sm text-white"
                 >
-                    Login state: {isLogin ? "ON" : "OFF"} (임시 토글)
+                    로그인 상태 토글: {isLogin ? "ON" : "OFF"}
                 </button>
             </section>
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">CocktailCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">카드에서 실제 사용한 샘플 데이터 기반으로 렌더링을 확인하세요.</p>
+                <p className="mb-4 text-sm text-gray-500">
+                    샘플 목록을 기반으로 기본/로딩/에러 상태를 즉시 전환해 보고 카드 출력 흐름을 점검합니다.
+                </p>
                 <SearchBox placeHolder="CocktailCard 검색" setSearchValue={setCocktailSearch} />
-                <StateButtons activeState={cocktailState} onChange={setCocktailState} />
+                <StateButtons
+                    states={demoStateStories}
+                    activeState={cocktailState}
+                    onChange={setCocktailState}
+                    ariaPrefix="CocktailCard"
+                />
                 <div className={uiTokenStyles.layout.content}>
                     {cocktailView.state === "loading" && <SkeletonCard count={2} />}
                     <StateSectionNotice
@@ -202,9 +234,16 @@ export default function DesignLabClient() {
 
             <section>
                 <h1 className="mb-2 text-2xl font-bold">IngredientCard component</h1>
-                <p className="mb-4 text-sm text-gray-500">재료 카드도 동일한 방식으로 데이터 조회 상태를 확인하세요.</p>
+                <p className="mb-4 text-sm text-gray-500">
+                    샘플 재료 목록에서 검색/로딩/에러/빈 상태 메시지를 함께 확인합니다.
+                </p>
                 <SearchBox placeHolder="IngredientCard 검색" setSearchValue={setIngredientSearch} />
-                <StateButtons activeState={ingredientState} onChange={setIngredientState} />
+                <StateButtons
+                    states={demoStateStories}
+                    activeState={ingredientState}
+                    onChange={setIngredientState}
+                    ariaPrefix="IngredientCard"
+                />
                 <div className={uiTokenStyles.layout.content}>
                     {ingredientView.state === "loading" && <SkeletonCard count={3} />}
                     <StateSectionNotice
@@ -222,8 +261,18 @@ export default function DesignLabClient() {
                     />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
-                    New ingredient action: {newIngredientRequested ? "요청됨" : "요청 안 함"}
+                    New ingredient 요청 상태: {newIngredientRequested ? "요청됨" : "대기"}
                 </p>
+            </section>
+
+            <section aria-label="상태 스냅샷 가이드" className="mt-8">
+                <h2 className="mb-2 text-xl font-semibold">상태 스냅샷 가이드</h2>
+                <ul className="list-disc pl-6 text-sm text-gray-600">
+                    <li>{`${dataStateLabels.ready}: 샘플 데이터 정상 출력`}</li>
+                    <li>{`${dataStateLabels.loading}: 로딩 스켈레톤 + 안내 메시지`}</li>
+                    <li>{`${dataStateLabels.error}: 에러 메시지 + 폴백 처리`}</li>
+                    <li>{`${dataStateLabels.empty}: 데이터가 0개인 경우 빈 상태 처리`}</li>
+                </ul>
             </section>
         </section>
     );

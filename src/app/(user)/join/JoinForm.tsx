@@ -4,6 +4,51 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { logWarn } from '@/app/(common)/safeLogger';
 
+type JoinPayload = {
+    name: string;
+    email: string;
+    password: string;
+};
+
+function trimText(value: string): string {
+    return value.trim();
+}
+
+function buildJoinPayload(formData: FormData): JoinPayload {
+    return {
+        name: trimText(String(formData.get("name") ?? "")),
+        email: trimText(String(formData.get("email") ?? "")),
+        password: String(formData.get("password") ?? ""),
+    };
+}
+
+function isValidJoinResponsePayload(
+    response: unknown,
+): response is { result: { resultCode: number; resultMessage?: string }; body?: string } {
+    if (!response || typeof response !== "object" || response === null) {
+        return false;
+    }
+
+    const typed = response as {
+        result?: { resultCode?: unknown; resultMessage?: unknown };
+        body?: unknown;
+    };
+
+    if (!typed.result || typeof typed.result !== "object") {
+        return false;
+    }
+
+    if (typeof typed.result.resultCode !== "number") {
+        return false;
+    }
+
+    if ("body" in typed && typed.body !== undefined && typeof typed.body !== "string") {
+        return false;
+    }
+
+    return true;
+}
+
 function JoinForm() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
@@ -74,33 +119,58 @@ function JoinForm() {
     }
   
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+        e.preventDefault();
     
-      const formData = new FormData(e.currentTarget);
-      const data = Object.fromEntries(formData.entries());
-    
-      try {
-        const response = await fetch(`${BASE_URL}/join`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-    
-        const { result,body } = await response.json();
-    
-        if (result.resultCode !== 200) {
-          alert(result.resultMessage);
-          window.location.reload();
-          return;
+        const formData = new FormData(e.currentTarget);
+        const data = buildJoinPayload(formData);
+
+        if (!isValidName(data.name) || !isValidEmail(data.email) || !isValidPassword(data.password)) {
+            alert("입력값 형식이 잘못되었습니다.");
+            return;
         }
     
-        alert(body)
-        router.push('/');
-      } catch (error) {
-        logWarn('Error submitting form:', error);
-      }
+        try {
+            const response = await fetch(`${BASE_URL}/join`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                alert("회원가입 요청이 실패했습니다. 잠시 후 다시 시도해주세요.");
+                return;
+            }
+
+            const contentType = response.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) {
+                throw new Error("Invalid response content type");
+            }
+
+            const text = await response.text();
+            if (!text.trim()) {
+                throw new Error("Empty response body");
+            }
+
+            const parsed = JSON.parse(text);
+            if (!isValidJoinResponsePayload(parsed)) {
+                throw new Error("Invalid API response format");
+            }
+
+            const { result, body } = parsed;
+
+            if (result.resultCode !== 200) {
+                alert("회원가입 처리에 실패했습니다. 입력값을 다시 확인해주세요.");
+                return;
+            }
+
+            alert(typeof body === "string" ? body : "회원가입이 완료되었습니다.");
+            router.push("/");
+        } catch (error) {
+            logWarn("Join request error", error);
+            alert("회원가입 처리 중 오류가 발생했습니다.");
+        }
     };
 
   return (

@@ -8,6 +8,27 @@ import { BASE_URL } from "../(common)/common";
 import { logWarn } from "../(common)/safeLogger";
 import { useLoginContext } from "../(context)/LoginContext";
 
+function getCsrfTokenValue(cookieHeader: string): string | undefined {
+    const tokenPair = cookieHeader
+        .split("; ")
+        .find((item) => item.startsWith("XSRF-TOKEN="));
+
+    if (!tokenPair) {
+        return undefined;
+    }
+
+    const rawToken = tokenPair.split("=", 2)[1];
+    if (!rawToken) {
+        return undefined;
+    }
+
+    try {
+        return decodeURIComponent(rawToken);
+    } catch {
+        return undefined;
+    }
+}
+
 export function TopNavigation() {
     const [menuToggle, setMenuToggle] = useState(false);
     const { isLogin, setIsLogin } = useLoginContext();
@@ -54,12 +75,11 @@ export function TopNavigation() {
     const handleLogout = async () => {
         try {
             const csrfToken = document.cookie
-                .split("; ")
-                .find((item) => item.startsWith("XSRF-TOKEN="))
-                ?.split("=")[1];
+                ? getCsrfTokenValue(document.cookie)
+                : undefined;
 
             const headers = csrfToken
-                ? { "X-CSRF-Token": decodeURIComponent(csrfToken) }
+                ? { "X-CSRF-Token": csrfToken }
                 : undefined;
 
             const response = await fetch(`${BASE_URL}/logout`, {

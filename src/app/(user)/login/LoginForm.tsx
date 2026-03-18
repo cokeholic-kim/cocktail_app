@@ -5,6 +5,50 @@ import { useLoginContext } from "@/app/(context)/LoginContext";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { logWarn, logInfo } from "@/app/(common)/safeLogger";
+
+type LoginPayload = {
+    username: string;
+    password: string;
+};
+
+function trimText(value: string): string {
+    return value.trim();
+}
+
+function buildLoginPayload(formData: FormData): LoginPayload {
+    return {
+        username: trimText(String(formData.get("username") ?? "")),
+        password: trimText(String(formData.get("password") ?? "")),
+    };
+}
+
+function isSafeLoginPayload(payload: LoginPayload): boolean {
+    return payload.username.length >= 3 && payload.password.length >= 8;
+}
+
+function extractSafeErrorMessage(rawValue: string | null): string {
+    if (!rawValue) {
+        return "로그인 처리 중 오류가 발생했습니다.";
+    }
+
+    const decoded = safeDecodeURIComponent(rawValue);
+    const sanitized = decoded
+        .replace(/[\r\n]/g, " ")
+        .slice(0, 100);
+
+    return /token|password|secret|credential|session/i.test(sanitized)
+        ? "로그인 처리 중 오류가 발생했습니다."
+        : sanitized;
+}
+
+function safeDecodeURIComponent(value: string): string {
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return "로그인 처리 중 오류가 발생했습니다.";
+    }
+}
 
 function LoginForm() {
    const router = useRouter();
@@ -13,7 +57,13 @@ function LoginForm() {
    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
+        const payload = buildLoginPayload(formData);
+
+        if (!isSafeLoginPayload(payload)) {
+            logInfo("Login validation failed");
+            alert("아이디 또는 비밀번호 형식이 올바르지 않습니다.");
+            return;
+        }
         
        try {
           const response = await fetch(`${BASE_URL}/login`, {
@@ -21,7 +71,7 @@ function LoginForm() {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify(payload),
             credentials: 'include'
           });
           
@@ -29,11 +79,15 @@ function LoginForm() {
                 setIsLogin(true);
                 router.push('/');
             } else {
-                alert('Login failed. Please check your credentials');
-                window.location.reload();
+                alert('로그인에 실패했습니다. 다시 시도해주세요.');
+                if (response.status >= 500) {
+                    logWarn("Login request failed with server error", response.status);
+                }
+                return;
             }
         } catch (error) {
-             alert('Error submitting form: ' + error);
+            logWarn("Login request error", error);
+            alert("로그인 처리 중 오류가 발생했습니다.");
         }
    }
 
@@ -45,22 +99,13 @@ function LoginForm() {
     window.location.href = BASE_URL + "/oauth2/authorization/google";
    }
 
-   const getData = () => {
-    fetch(BASE_URL + "/my", {
-      method: 'GET',
-      credentials: 'include'
-    })
-    .then(res => res.json())
-    .then(data => { alert(data); })
-    .catch(error => alert(error));
-   }
-
    const showErrorAlert = () => {
      const urlParams = new URLSearchParams(window.location.search);
      const error = urlParams.get("error");
 
      if (error) {
-       alert(decodeURIComponent(error)); // 에러 메시지를 alert로 표시
+       const message = extractSafeErrorMessage(error);
+       alert(message);
      }
    };
 

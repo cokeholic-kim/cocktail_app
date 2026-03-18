@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { AUTH_COOKIE_NAME } from "@/app/(common)/constants";
+import { logWarn } from "./safeLogger";
 
 export type FetchResult<T> = {
     ok: boolean;
@@ -20,7 +21,8 @@ export async function fetchWithCookie<T>(
     };
 
     if (authToken?.value) {
-        headers["Cookie"] = `${cookieName}=${authToken.value}`;
+        const safeCookieName = /^[A-Za-z0-9_-]{1,64}$/.test(cookieName) ? cookieName : AUTH_COOKIE_NAME;
+        headers["Cookie"] = `${safeCookieName}=${authToken.value}`;
     }
 
     try {
@@ -37,6 +39,16 @@ export async function fetchWithCookie<T>(
             };
         }
 
+        const contentType = response.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+            return {
+                ok: false,
+                data: fallback as T,
+                status: response.status,
+                error: "Unexpected response content type",
+            };
+        }
+
         const text = await response.text();
         if (!text.trim()) {
             return {
@@ -47,11 +59,22 @@ export async function fetchWithCookie<T>(
             };
         }
 
-        const data = JSON.parse(text) as T;
-        return { ok: true, data, status: response.status, error: null };
+        try {
+            const data = JSON.parse(text) as T;
+            return { ok: true, data, status: response.status, error: null };
+        } catch (error) {
+            const message = error instanceof Error ? error.message : "Invalid JSON response";
+            logWarn("Fetch response json parse failed:", message);
+            return {
+                ok: false,
+                data: fallback as T,
+                status: response.status,
+                error: "Invalid response format",
+            };
+        }
     } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown fetch error";
-        console.error("Fetch failed:", error);
+        logWarn("Fetch failed:", message);
         return {
             ok: false,
             data: fallback as T,

@@ -42,6 +42,8 @@ export const designLabSearchStateMessages = {
     sourceEmpty: "샘플 데이터가 없습니다.",
 };
 
+export const designLabFallbackMessage = "샘플 데이터 조회 실패. 기본 상태로 전환합니다.";
+
 export const demoCocktails: DemoCocktail[] = [
     {
         id: "cocktail-afternoon-glow",
@@ -88,26 +90,24 @@ export const dataStateLabels: Record<DesignLabState, string> = {
     error: "Error",
 };
 
-export const sampleErrorMessage = "샘플 데이터 조회 실패. 기본 상태로 전환합니다.";
-
 export const demoCocktailResponse: Record<DesignLabState, DemoResult<DemoCocktail>> = {
     ready: { ok: true, data: { body: demoCocktails } },
-    loading: { ok: false, error: sampleErrorMessage },
+    loading: { ok: false, error: designLabFallbackMessage },
     empty: { ok: true, data: { body: [] } },
     error: {
         ok: false,
         data: { body: demoCocktails },
-        error: sampleErrorMessage,
+        error: designLabFallbackMessage,
     },
 };
 
 export const demoIngredientResponse: Record<DesignLabState, DemoResult<DemoIngredient>> = {
     ready: { ok: true, data: { body: demoIngredients } },
-    loading: { ok: false, error: sampleErrorMessage },
+    loading: { ok: false, error: designLabFallbackMessage },
     empty: { ok: true, data: { body: [] } },
     error: {
         ok: false,
         data: { body: demoIngredients },
-        error: sampleErrorMessage,
+        error: designLabFallbackMessage,
     },
 };

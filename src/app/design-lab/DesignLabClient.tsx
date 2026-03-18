@@ -12,6 +12,7 @@ import {
     demoCocktailResponse,
     demoIngredientResponse,
     demoStateStories,
+    designLabFallbackMessage,
     designLabSearchStateMessages,
     designLabStateLabels,
     designLabStateMessages,
@@ -38,9 +39,10 @@ function filterBySearch<T, K extends keyof T>(items: T[], keyword: string, field
 function buildDemoView<T>(
     state: DesignLabState,
     items: T[],
-    sourceItemCount: number,
+    hasSourceItems: boolean,
+    hasSearchKeyword: boolean,
     fallbackMessage: string,
-    searchEmptyMessage: string
+    messageSet: typeof designLabSearchStateMessages
 ): DemoViewState<T> {
     if (state === "loading") {
         return { state: "loading", items: [], message: "" };
@@ -51,10 +53,12 @@ function buildDemoView<T>(
     }
 
     if (!items.length) {
+        const hasSearchResult = hasSourceItems && hasSearchKeyword;
+
         return {
             state: "empty",
             items: [],
-            message: sourceItemCount > 0 ? searchEmptyMessage : fallbackMessage,
+            message: hasSearchResult ? messageSet.searchResultEmpty : messageSet.sourceEmpty,
         };
     }
 
@@ -135,8 +139,8 @@ function StateButtons({
     );
 }
 
-function buildSearchMessage(keyword: string, messageSet: typeof designLabSearchStateMessages): string {
-    return keyword.trim() ? messageSet.searchResultEmpty : messageSet.sourceEmpty;
+function hasSearchKeyword(keyword: string): boolean {
+    return keyword.trim().length > 0;
 }
 
 export default function DesignLabClient() {
@@ -158,32 +162,32 @@ export default function DesignLabClient() {
         () => filterBySearch(ingredientSource.data?.body ?? [], ingredientSearch, "ingredientName"),
         [ingredientSource, ingredientSearch]
     );
-
-    const fallbackMessage = "샘플 데이터 조회 실패. 기본 상태로 전환합니다.";
-    const cocktailSearchMessage = buildSearchMessage(cocktailSearch, designLabSearchStateMessages);
-    const ingredientSearchMessage = buildSearchMessage(ingredientSearch, designLabSearchStateMessages);
+    const isCocktailSearch = hasSearchKeyword(cocktailSearch);
+    const isIngredientSearch = hasSearchKeyword(ingredientSearch);
 
     const cocktailView = useMemo(
         () =>
             buildDemoView(
                 cocktailState,
                 filteredCocktails,
-                cocktailSource.data?.body?.length ?? 0,
-                cocktailSource.error || fallbackMessage,
-                cocktailSearchMessage
+                (cocktailSource.data?.body?.length ?? 0) > 0,
+                isCocktailSearch,
+                cocktailSource.error || designLabFallbackMessage,
+                designLabSearchStateMessages
             ),
-        [cocktailState, filteredCocktails, cocktailSource, cocktailSearchMessage]
+        [cocktailState, filteredCocktails, cocktailSource, isCocktailSearch]
     );
     const ingredientView = useMemo(
         () =>
             buildDemoView(
                 ingredientState,
                 filteredIngredients,
-                ingredientSource.data?.body?.length ?? 0,
-                ingredientSource.error || fallbackMessage,
-                ingredientSearchMessage
+                (ingredientSource.data?.body?.length ?? 0) > 0,
+                isIngredientSearch,
+                ingredientSource.error || designLabFallbackMessage,
+                designLabSearchStateMessages
             ),
-        [ingredientState, filteredIngredients, ingredientSource, ingredientSearchMessage]
+        [ingredientState, filteredIngredients, ingredientSource, isIngredientSearch]
     );
 
     return (
